@@ -1,5 +1,3 @@
-import { colors } from "./tokens";
+import { darkTheme } from "./dark";
 
-export type Theme = {
-  colors: typeof colors;
-};
+export type Theme = typeof darkTheme;
