@@ -13,7 +13,7 @@ export default function HomeScreen() {
           ...theme.typography.h1,
         }}
       >
-        Home
+        Fire
       </Text>
     </Screen>
   );
