@@ -1,3 +1,8 @@
+import {
+    AuthChangeEvent,
+    Session,
+} from "@supabase/supabase-js";
+
 import { supabase } from "@/lib/supabase";
 
 export const authService = {
@@ -23,7 +28,12 @@ export const authService = {
     return supabase.auth.getSession();
   },
 
-  onAuthStateChange(callback: Parameters<typeof supabase.auth.onAuthStateChange>[0]) {
+  onAuthStateChange(
+    callback: (
+      event: AuthChangeEvent,
+      session: Session | null
+    ) => void
+  ) {
     return supabase.auth.onAuthStateChange(callback);
   },
 };

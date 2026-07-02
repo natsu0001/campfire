@@ -1,10 +1,9 @@
 import { Tabs } from "expo-router";
 import {
-    House,
-    MessageCircle,
-    PlusSquare,
-    User,
-    Users,
+  MessageCircle,
+  PlusSquare,
+  User,
+  Users
 } from "lucide-react-native";
 
 import { useTheme } from "@/theme";
@@ -26,15 +25,7 @@ export default function TabsLayout() {
         tabBarInactiveTintColor: theme.colors.textMuted,
       }}
     >
-      <Tabs.Screen
-        name="home"
-        options={{
-          title: "Fire",
-          tabBarIcon: ({ color, size }) => (
-            <House color={color} size={size} />
-          ),
-        }}
-      />
+      
 
       <Tabs.Screen
         name="camp"
