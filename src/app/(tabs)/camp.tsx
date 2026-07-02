@@ -1,20 +1,17 @@
-import { Screen } from "@/components/ui";
-import { useTheme } from "@/theme";
-import { Text } from "react-native";
+import { View } from "react-native";
 
-export default function HomeScreen() {
-  const theme = useTheme();
+import { Text } from "@/components/ui/Text";
 
+export default function CampScreen() {
   return (
-    <Screen>
-      <Text
-        style={{
-          color: theme.colors.text,
-          ...theme.typography.h1,
-        }}
-      >
-        Home
-      </Text>
-    </Screen>
+    <View
+      style={{
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
+      <Text variant="h2">Camp</Text>
+    </View>
   );
 }

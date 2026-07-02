@@ -1,7 +1,9 @@
 import { Text } from "@/components/ui/Text";
 import { View } from "react-native";
 
-export default function LoginScreen() {
+
+
+export default function RegisterScreen() {
   return (
     <View
       style={{
@@ -10,7 +12,7 @@ export default function LoginScreen() {
         alignItems: "center",
       }}
     >
-     <Text variant="h1">Login</Text>
+      <Text variant="h2">Register</Text>
     </View>
   );
 }

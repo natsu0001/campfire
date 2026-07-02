@@ -1,7 +1,7 @@
-import { Text } from "@/components/ui/Text";
+import { Text } from "@/components/ui";
 import { View } from "react-native";
 
-export default function LoginScreen() {
+export default function UsernameScreen() {
   return (
     <View
       style={{
@@ -10,7 +10,7 @@ export default function LoginScreen() {
         alignItems: "center",
       }}
     >
-     <Text variant="h1">Login</Text>
+      <Text variant="h2">Choose Username</Text>
     </View>
   );
 }
