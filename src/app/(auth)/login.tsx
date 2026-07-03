@@ -1,26 +1,20 @@
-import { Button, Text } from "@/components/ui";
-import { useTheme } from "@/theme";
+import { Button, Screen, Text } from "@/components/ui";
 import { View } from "react-native";
 
 export default function LoginScreen() {
-  const { colors, spacing } = useTheme();
-
   return (
-    <View
-      style={{
-        flex: 1,
-        backgroundColor: colors.background,
-        justifyContent: "center",
-        padding: spacing.lg,
-        gap: spacing.lg,
-      }}
-    >
-      <Text variant="display">Campfire</Text>
+    <Screen>
+      <View
+        style={{
+          flex: 1,
+          justifyContent: "center",
+          gap: 24,
+        }}
+      >
+        <Text variant="display">Campfire</Text>
 
-      <Button
-        title="Login"
-        onPress={() => {}}
-      />
-    </View>
+        <Button title="Login" />
+      </View>
+    </Screen>
   );
 }

@@ -1,50 +1,78 @@
+import { PropsWithChildren } from "react";
+import {
+  KeyboardAvoidingView,
+  Platform,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  View,
+} from "react-native";
+
 import { useTheme } from "@/theme";
-import { ReactNode } from "react";
-import { ScrollView, View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
 
-type ScreenProps = {
-  children: ReactNode;
+interface ScreenProps extends PropsWithChildren {
   scroll?: boolean;
-};
+  keyboard?: boolean;
+}
 
-export default function Screen({
+export function Screen({
   children,
   scroll = false,
+  keyboard = false,
 }: ScreenProps) {
-  const theme = useTheme();
+  const { colors, spacing } = useTheme();
 
-  if (scroll) {
-    return (
-      <SafeAreaView
-        style={{ flex: 1, backgroundColor: theme.colors.background }}
-      >
-        <ScrollView
-          contentContainerStyle={{
-            padding: theme.spacing.lg,
-          }}
-        >
-          {children}
-        </ScrollView>
-      </SafeAreaView>
-    );
-  }
+  const content = scroll ? (
+    <ScrollView
+      keyboardShouldPersistTaps="handled"
+      contentContainerStyle={{
+        flexGrow: 1,
+        padding: spacing.lg,
+      }}
+      showsVerticalScrollIndicator={false}
+    >
+      {children}
+    </ScrollView>
+  ) : (
+    <View
+      style={{
+        flex: 1,
+        padding: spacing.lg,
+      }}
+    >
+      {children}
+    </View>
+  );
 
   return (
     <SafeAreaView
-      style={{
-        flex: 1,
-        backgroundColor: theme.colors.background,
-      }}
+      style={[
+        styles.safeArea,
+        {
+          backgroundColor: colors.background,
+        },
+      ]}
     >
-      <View
-        style={{
-          flex: 1,
-          padding: theme.spacing.lg,
-        }}
-      >
-        {children}
-      </View>
+      {keyboard ? (
+        <KeyboardAvoidingView
+          style={styles.flex}
+          behavior={Platform.OS === "ios" ? "padding" : undefined}
+        >
+          {content}
+        </KeyboardAvoidingView>
+      ) : (
+        content
+      )}
     </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+  },
+
+  flex: {
+    flex: 1,
+  },
+});
