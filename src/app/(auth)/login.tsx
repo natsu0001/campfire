@@ -1,47 +1,97 @@
-import { useState } from "react";
-import { View } from "react-native";
-
 import { Button, Input, Screen, Text } from "@/components/ui";
+import { useAuthStore } from "@/store/auth.store";
+import {
+  LoginForm,
+  loginSchema,
+} from "@/validation/auth.schema";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Link } from "expo-router";
+import { Controller, useForm } from "react-hook-form";
 
 export default function LoginScreen() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const signIn = useAuthStore((s) => s.signInWithEmail);
+
+  const {
+    control,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<LoginForm>({
+    resolver: zodResolver(loginSchema),
+
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
+
+  async function onSubmit(data: LoginForm) {
+    try {
+      await signIn(data.email, data.password);
+    } catch (err: any) {
+      alert(err.message);
+    }
+  }
 
   return (
-    <Screen centered>
-      <View
+    <Screen centered keyboard>
+      <Text
+        variant="display"
         style={{
-          width: "100%",
-          maxWidth: 420,
-          gap: 20,
+          marginBottom: 48,
+          textAlign: "center",
         }}
       >
-        <Text
-          variant="display"
-          style={{ textAlign: "center", marginBottom: 12 }}
-        >
-          Campfire
-        </Text>
+        Campfire
+      </Text>
 
-        <Input
-          label="Email"
-          value={email}
-          onChangeText={setEmail}
-          placeholder="Enter your email"
-          autoCapitalize="none"
-          keyboardType="email-address"
-        />
+      <Controller
+        control={control}
+        name="email"
+        render={({ field: { onChange, value } }) => (
+          <Input
+            label="Email"
+            value={value}
+            onChangeText={onChange}
+            keyboardType="email-address"
+            autoCapitalize="none"
+            error={errors.email?.message}
+          />
+        )}
+      />
 
-        <Input
-          label="Password"
-          value={password}
-          onChangeText={setPassword}
-          placeholder="Enter your password"
-          secureTextEntry
-        />
+      <Controller
+        control={control}
+        name="password"
+        render={({ field: { onChange, value } }) => (
+          <Input
+            label="Password"
+            value={value}
+            onChangeText={onChange}
+            secureTextEntry
+            error={errors.password?.message}
+          />
+        )}
+      />
 
-        <Button title="Login" />
-      </View>
+      <Button
+        title="Login"
+        loading={isSubmitting}
+        onPress={handleSubmit(onSubmit)}
+      />
+      
+<Link href="/(auth)/register" asChild>
+  <Text
+    variant="bodySmall"
+    style={{
+      textAlign: "center",
+      marginTop: 24,
+    }}
+  >
+    Don't have an account? Register
+  </Text>
+</Link>
+
+
     </Screen>
   );
 }
