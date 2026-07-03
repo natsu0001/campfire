@@ -30,10 +30,12 @@ export function Input({
 
   const styles = StyleSheet.create({
     container: {
+        width: "100%",
       gap: spacing.sm,
     },
 
     inputWrapper: {
+        width: "100%",
       flexDirection: "row",
       alignItems: "center",
       borderWidth: 1,
