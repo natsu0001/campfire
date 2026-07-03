@@ -1,41 +1,57 @@
-import { useTheme } from "@/theme";
 import {
-    ActivityIndicator,
-    Pressable,
-    Text,
+  ActivityIndicator,
+  Pressable,
+  PressableProps,
+  StyleProp,
+  StyleSheet,
+  ViewStyle,
 } from "react-native";
 
-type Props = {
-  title: string;
-  onPress?: () => void;
-  loading?: boolean;
-};
+import { radius } from "@/theme/tokens/radius";
+import { spacing } from "@/theme/tokens/spacing";
+import { useTheme } from "@/theme/useTheme";
 
-export default function Button({
+import { Text } from "./Text";
+
+type Variant = "primary" | "secondary" | "outline" | "ghost" | "danger";
+
+interface ButtonProps extends PressableProps {
+  title: string;
+  loading?: boolean;
+  variant?: Variant;
+  style?: StyleProp<ViewStyle>;
+}
+
+export function Button({
   title,
-  onPress,
   loading = false,
-}: Props) {
+  variant = "primary",
+  style:userStyle,
+  disabled,
+  ...props
+}: ButtonProps) {
   const theme = useTheme();
 
+  const styles = getStyles(theme);
+
   return (
-    <Pressable
-      onPress={onPress}
-      style={{
-        backgroundColor: theme.colors.primary,
-        paddingVertical: theme.spacing.md,
-        borderRadius: theme.radius.lg,
-        alignItems: "center",
-      }}
-    >
+ <Pressable
+  {...props}
+  disabled={disabled || loading}
+  style={({ pressed }) => [
+    styles.base,
+    styles[variant],
+    pressed && styles.pressed,
+    (disabled || loading) && styles.disabled,
+    userStyle,
+  ]}
+>
       {loading ? (
-        <ActivityIndicator color={theme.colors.white} />
+        <ActivityIndicator color={styles.text.color} />
       ) : (
         <Text
-          style={{
-            color: theme.colors.white,
-            ...theme.typography.button,
-          }}
+          variant="button"
+          style={styles.text}
         >
           {title}
         </Text>
@@ -43,3 +59,48 @@ export default function Button({
     </Pressable>
   );
 }
+
+const getStyles = (theme: ReturnType<typeof useTheme>) =>
+  StyleSheet.create({
+    base: {
+      height: 54,
+      borderRadius: radius.lg,
+      justifyContent: "center",
+      alignItems: "center",
+      paddingHorizontal: spacing.lg,
+    },
+
+    primary: {
+      backgroundColor: theme.colors.primary,
+    },
+
+    secondary: {
+      backgroundColor: theme.colors.surface,
+    },
+
+    outline: {
+      backgroundColor: "transparent",
+      borderWidth: 1,
+      borderColor: theme.colors.border,
+    },
+
+    ghost: {
+      backgroundColor: "transparent",
+    },
+
+    danger: {
+      backgroundColor: theme.colors.error,
+    },
+
+    text: {
+      color: "#FFFFFF",
+    },
+
+    pressed: {
+      opacity: 0.8,
+    },
+
+    disabled: {
+      opacity: 0.5,
+    },
+  });
