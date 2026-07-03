@@ -1,20 +1,38 @@
-import { Button, Screen, Text } from "@/components/ui";
-import { View } from "react-native";
+import { useState } from "react";
+
+import {
+  Button,
+  Input,
+  Screen,
+  Text,
+} from "@/components/ui";
 
 export default function LoginScreen() {
-  return (
-    <Screen>
-      <View
-        style={{
-          flex: 1,
-          justifyContent: "center",
-          gap: 24,
-        }}
-      >
-        <Text variant="display">Campfire</Text>
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
-        <Button title="Login" />
-      </View>
+  return (
+    <Screen centered>
+      <Text variant="display">Campfire</Text>
+
+      <Input
+        label="Email"
+        value={email}
+        onChangeText={setEmail}
+        placeholder="Enter your email"
+        keyboardType="email-address"
+        autoCapitalize="none"
+      />
+
+      <Input
+        label="Password"
+        value={password}
+        onChangeText={setPassword}
+        placeholder="Enter your password"
+        secureTextEntry
+      />
+
+      <Button title="Login" />
     </Screen>
   );
 }

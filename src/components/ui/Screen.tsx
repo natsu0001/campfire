@@ -13,12 +13,14 @@ import { useTheme } from "@/theme";
 interface ScreenProps extends PropsWithChildren {
   scroll?: boolean;
   keyboard?: boolean;
+  centered?: boolean;
 }
 
 export function Screen({
   children,
   scroll = false,
   keyboard = false,
+  centered = false,
 }: ScreenProps) {
   const { colors, spacing } = useTheme();
 
@@ -34,14 +36,20 @@ export function Screen({
       {children}
     </ScrollView>
   ) : (
-    <View
-      style={{
-        flex: 1,
-        padding: spacing.lg,
-      }}
-    >
-      {children}
-    </View>
+   <View
+  style={[
+    {
+      flex: 1,
+      padding: spacing.lg,
+    },
+    centered && {
+      justifyContent: "center",
+      alignItems: "center",
+    },
+  ]}
+>
+  {children}
+</View>
   );
 
   return (
