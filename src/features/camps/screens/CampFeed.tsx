@@ -1,8 +1,7 @@
-import { ActivityIndicator } from "react-native";
-
-import { Screen, Text } from "@/components/ui";
+import { Button, Screen, Text } from "@/components/ui";
 import { useTheme } from "@/theme";
-
+import { router } from "expo-router";
+import { ActivityIndicator, View } from "react-native";
 import { CampList } from "../components/CampList";
 import { useCamps } from "../hooks/useCamps";
 
@@ -27,16 +26,23 @@ export function CampFeed() {
 
   return (
     <Screen>
-      <Text
-        variant="display"
-        style={{
-          margin: 20,
-        }}
-      >
-        Camps
-      </Text>
+      <View
+  style={{
+    margin: 20,
+    gap: 16,
+  }}
+>
+  <Text variant="display">
+    Camps
+  </Text>
 
-      <CampList camps={data} />
+  <Button
+    title="Create Camp"
+    onPress={() => router.push("/create-camp")}
+  />
+</View>
+
+<CampList camps={data} />
     </Screen>
   );
 }
