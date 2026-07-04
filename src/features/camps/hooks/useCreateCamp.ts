@@ -6,20 +6,14 @@ export function useCreateCamp() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({
-      ownerId,
-      name,
-      description,
-    }: {
-      ownerId: string;
-      name: string;
-      description: string;
-    }) =>
-      campService.createCamp(
-        ownerId,
-        name,
-        description
-      ),
+   mutationFn: ({
+  name,
+  description,
+}: {
+  name: string;
+  description: string;
+}) =>
+  campService.createCamp(name, description),
 
     onSuccess: () => {
       queryClient.invalidateQueries({

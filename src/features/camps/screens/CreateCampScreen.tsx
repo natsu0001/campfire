@@ -24,7 +24,7 @@ export default function CreateCampScreen() {
     if (!user) return;
 
     await mutation.mutateAsync({
-      ownerId: user.id,
+     
       name,
       description,
     });

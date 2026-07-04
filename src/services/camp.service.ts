@@ -21,29 +21,14 @@ export const campService = {
       .eq("user_id", userId);
   },
 
-  async createCamp(
-    ownerId: string,
-    name: string,
-    description: string
-  ) {
-    const { data: camp, error } = await supabase
-      .from("camps")
-      .insert({
-        owner_id: ownerId,
-        name,
-        description,
-      })
-      .select()
-      .single();
-
-    if (error) throw error;
-
-    await supabase.from("camp_members").insert({
-      camp_id: camp.id,
-      user_id: ownerId,
-      role: "owner",
-    });
-
-    return camp;
-  },
+ async createCamp(
+  name: string,
+  description: string
+) {
+  return supabase.rpc("create_camp", {
+    p_name: name,
+    p_description: description,
+    p_is_private: false,
+  });
+}
 };
