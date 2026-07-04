@@ -30,5 +30,14 @@ export const campService = {
     p_description: description,
     p_is_private: false,
   });
+  
+},
+async getCampById(id: string) {
+  return supabase
+    .from("camps")
+    .select("*")
+    .eq("id", id)
+    .single();
 }
+
 };

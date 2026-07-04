@@ -3,7 +3,7 @@ import { Pressable, StyleSheet } from "react-native";
 import { Text } from "@/components/ui";
 import { useTheme } from "@/theme";
 import { Camp } from "@/types/camp";
-
+import { router } from "expo-router";
 interface Props {
   camp: Camp;
   onPress?: () => void;
@@ -14,7 +14,7 @@ export function CampCard({ camp, onPress }: Props) {
 
   return (
     <Pressable
-      onPress={onPress}
+      onPress={() => router.push(`/camp/${camp.id}`)}
       style={[
         styles.card,
         {
