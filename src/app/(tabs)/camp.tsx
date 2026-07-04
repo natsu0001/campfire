@@ -1,17 +1,3 @@
-import { View } from "react-native";
+import { CampFeed } from "@/features/camps/screens/CampFeed";
 
-import { Text } from "@/components/ui/Text";
-
-export default function CampScreen() {
-  return (
-    <View
-      style={{
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-    >
-      <Text variant="h2">Camp</Text>
-    </View>
-  );
-}
+export default CampFeed;
