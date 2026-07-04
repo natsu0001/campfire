@@ -11,7 +11,7 @@ export const colors = {
 
   // Text
   text: "#F8FAFC",
-   textSecondary: "#94A3B8",
+  textSecondary: "#94A3B8",
   textMuted: "#94A3B8",
   placeholder: "#64748B",
 
