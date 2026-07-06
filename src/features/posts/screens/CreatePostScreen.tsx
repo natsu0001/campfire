@@ -1,10 +1,14 @@
 import { router, useLocalSearchParams } from "expo-router";
 import { useState } from "react";
 
-import { Button, Input, Screen, Text } from "@/components/ui";
+import {
+  Button,
+  Input,
+  Screen,
+  Text,
+} from "@/components/ui";
 
 import { useAuthStore } from "@/store/auth.store";
-
 import { useCreatePost } from "../hooks/useCreatePost";
 
 export default function CreatePostScreen() {
@@ -18,26 +22,47 @@ export default function CreatePostScreen() {
 
   const [content, setContent] = useState("");
 
-  async function handlePost() {
-    if (!user) return;
+async function handlePublish() {
+  console.log("===== CREATE POST =====");
+  console.log("User:", user);
+  console.log("Camp ID:", campId);
 
-    if (!content.trim()) return;
+  if (!user) {
+    console.log("No authenticated user.");
+    return;
+  }
 
-    await mutation.mutateAsync({
+  const text = content.trim();
+
+  if (!text) {
+    console.log("Content is empty.");
+    return;
+  }
+
+  try {
+    const result = await mutation.mutateAsync({
       campId,
       authorId: user.id,
-      content,
+      content: text,
     });
 
+    console.log("SUCCESS:", result);
+
+    setContent("");
+
     router.back();
+  } catch (error) {
+    console.log("POST ERROR:");
+    console.log(error);
   }
+}
 
   return (
     <Screen keyboard>
       <Text
         variant="display"
         style={{
-          marginBottom: 32,
+          marginBottom: 24,
         }}
       >
         New Post
@@ -52,8 +77,8 @@ export default function CreatePostScreen() {
 
       <Button
         title="Publish"
-        onPress={handlePost}
         loading={mutation.isPending}
+        onPress={handlePublish}
       />
     </Screen>
   );
