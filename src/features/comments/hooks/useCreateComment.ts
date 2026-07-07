@@ -1,7 +1,4 @@
-import {
-    useMutation,
-    useQueryClient,
-} from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { commentService } from "@/services/comment.service";
 
@@ -27,6 +24,10 @@ export function useCreateComment() {
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({
         queryKey: ["comments", variables.postId],
+      });
+
+      queryClient.invalidateQueries({
+        queryKey: ["post", variables.postId],
       });
     },
   });

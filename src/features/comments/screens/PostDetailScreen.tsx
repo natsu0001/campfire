@@ -5,7 +5,8 @@ import { ActivityIndicator } from "react-native";
 import { useComments } from "../hooks/useComments";
 
 import { usePost } from "@/features/posts/hooks/usePost";
-
+import { CommentInput } from "../components/CommentInput";
+import { CommentList } from "../components/CommentList";
 
 export default function PostDetailScreen() {
   const { colors } = useTheme();
@@ -42,7 +43,7 @@ export default function PostDetailScreen() {
     );
   }
 
-  return (
+return (
   <Screen scroll keyboard>
     <Text variant="h2">
       {post.profiles.display_name}
@@ -71,27 +72,9 @@ export default function PostDetailScreen() {
       Comments
     </Text>
 
-    {comments.length === 0 ? (
-      <Text variant="body">
-        No comments yet.
-      </Text>
-    ) : (
-      comments.map((comment) => (
-        <Text
-          key={comment.id}
-          variant="body"
-          style={{
-            marginBottom: 12,
-          }}
-        >
-          <Text variant="h3">
-            {comment.profiles.display_name}
-          </Text>
-          {"\n"}
-          {comment.content}
-        </Text>
-      ))
-    )}
+    <CommentList comments={comments} />
+
+    <CommentInput postId={post.id} />
   </Screen>
 );
 }
