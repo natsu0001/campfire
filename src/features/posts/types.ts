@@ -20,4 +20,7 @@ export interface Post {
   post_likes: {
     user_id: string;
   }[];
+  comments: {
+  id: string;
+}[];
 }

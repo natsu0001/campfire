@@ -59,7 +59,30 @@ async unlikePost(postId: string, userId: string) {
     .eq("post_id", postId)
     .eq("user_id", userId);
 },
+async getPost(id: string) {
+  const { data, error } = await supabase
+    .from("posts")
+    .select(`
+  *,
+  profiles(
+    username,
+    display_name,
+    avatar_url
+  ),
+  post_likes(
+    user_id
+  ),
+  comments(
+    id
+  )
+`)
+    .eq("id", id)
+    .single();
 
+  if (error) throw error;
+
+  return data;
+},
 
 };
 
