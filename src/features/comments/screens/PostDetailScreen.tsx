@@ -7,7 +7,7 @@ import { useComments } from "../hooks/useComments";
 import { usePost } from "@/features/posts/hooks/usePost";
 import { CommentInput } from "../components/CommentInput";
 import { CommentList } from "../components/CommentList";
-
+import { useCommentsRealtime } from "../hooks/useCommentsRealtime";
 export default function PostDetailScreen() {
   const { colors } = useTheme();
 
@@ -23,6 +23,8 @@ export default function PostDetailScreen() {
   const {
     data: comments = [],
   } = useComments(id); // ✅ Hook is always called
+
+  useCommentsRealtime(id);
 
   if (isLoading) {
     return (

@@ -6,8 +6,8 @@ import { PostList } from "@/features/posts/components/PostList";
 import { usePosts } from "@/features/posts/hooks/usePosts";
 import { useTheme } from "@/theme";
 
+import { usePostsRealtime } from "@/features/posts/hooks/usePostsRealtime";
 import { useCamp } from "../hooks/useCamp";
-
 export default function CampScreen() {
   const { colors, spacing } = useTheme();
 
@@ -18,6 +18,7 @@ export default function CampScreen() {
   const { data: camp, isLoading } = useCamp(id);
 
   const { data: posts = [] } = usePosts(id);
+  usePostsRealtime(id);
 
   if (isLoading) {
     return (
