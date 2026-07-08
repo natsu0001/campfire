@@ -73,6 +73,9 @@ async function handlePublish() {
         multiline
         value={content}
         onChangeText={setContent}
+        style={{
+          marginBottom: 15,
+        }}
       />
 
       <Button

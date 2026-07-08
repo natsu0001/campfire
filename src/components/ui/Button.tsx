@@ -69,6 +69,7 @@ const getStyles = (theme: ReturnType<typeof useTheme>) =>
       justifyContent: "center",
       alignItems: "center",
       paddingHorizontal: spacing.lg,
+      marginVertical: spacing.sm,
     },
 
     primary: {
