@@ -1,20 +1,34 @@
-import { Screen } from "@/components/ui";
-import { useTheme } from "@/theme";
-import { Text } from "react-native";
+import { router } from "expo-router";
 
-export default function HomeScreen() {
-  const theme = useTheme();
+import { Button, Screen, Text } from "@/components/ui";
+import { useAuthStore } from "@/store/auth.store";
+
+export default function ProfileScreen() {
+  const user = useAuthStore((s) => s.user);
+  const signOut = useAuthStore((s) => s.signOut);
+
+  async function handleLogout() {
+    try {
+      await signOut();
+
+      router.replace("/(auth)/login");
+    } catch (err) {
+      console.error(err);
+    }
+  }
 
   return (
-    <Screen>
-      <Text
-        style={{
-          color: theme.colors.text,
-          ...theme.typography.h1,
-        }}
-      >
-        Home
+    <Screen centered>
+      <Text variant="display">Profile</Text>
+
+      <Text style={{ marginVertical: 20 }}>
+        {user?.email}
       </Text>
+
+      <Button
+        title="Logout"
+        onPress={handleLogout}
+      />
     </Screen>
   );
 }

@@ -12,11 +12,14 @@ export function AuthProvider({ children }: PropsWithChildren) {
     const {
       data: { subscription },
     } = authService.onAuthStateChange((_event, session) => {
-      useAuthStore.setState({
-        session,
-        user: session?.user ?? null,
-      });
-    });
+  console.log("AUTH EVENT:", _event);
+  console.log("SESSION:", session?.user?.email);
+
+  useAuthStore.setState({
+    session,
+    user: session?.user ?? null,
+  });
+});
 
     return () => {
       subscription.unsubscribe();

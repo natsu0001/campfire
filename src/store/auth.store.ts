@@ -28,12 +28,14 @@ export const useAuthStore = create<AuthState>((set) => ({
     if (error) throw error;
   },
 
-  signInWithEmail: async (email, password) => {
-    const { error } = await authService.signIn(email, password);
+signInWithEmail: async (email, password) => {
+  const { data, error } = await authService.signIn(email, password);
 
-    if (error) throw error;
-  },
+  console.log("SIGN IN DATA:", data);
+  console.log("SIGN IN ERROR:", error);
 
+  if (error) throw error;
+},
   signOut: async () => {
     const { error } = await authService.signOut();
 

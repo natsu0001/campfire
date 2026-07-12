@@ -5,7 +5,7 @@ import {
   loginSchema,
 } from "@/validation/auth.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Link } from "expo-router";
+import { Link, router } from "expo-router";
 import { Controller, useForm } from "react-hook-form";
 
 export default function LoginScreen() {
@@ -25,12 +25,14 @@ export default function LoginScreen() {
   });
 
   async function onSubmit(data: LoginForm) {
-    try {
-      await signIn(data.email, data.password);
-    } catch (err: any) {
-      alert(err.message);
-    }
+  try {
+    await signIn(data.email, data.password);
+
+    router.replace("/(tabs)/camp");
+  } catch (err: any) {
+    alert(err.message);
   }
+}
 
   return (
     <Screen centered keyboard>
