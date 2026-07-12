@@ -1,5 +1,6 @@
+import { FriendUser } from "@/features/friends/types";
 import { supabase } from "@/lib/supabase";
-
+    
 export const friendService = {
   async searchUsers(query: string, currentUserId: string) {
     const { data, error } = await supabase
@@ -11,7 +12,7 @@ export const friendService = {
 
     if (error) throw error;
 
-    return data;
+    return data as FriendUser[];
   },
 
   async sendRequest(senderId: string, receiverId: string) {
