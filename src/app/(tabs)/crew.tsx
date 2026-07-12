@@ -1,20 +1,29 @@
-import { Screen } from "@/components/ui";
-import { useTheme } from "@/theme";
-import { Text } from "react-native";
+import { router } from "expo-router";
 
-export default function HomeScreen() {
-  const theme = useTheme();
+import {
+  Button,
+  Screen,
+  Text,
+} from "@/components/ui";
 
+export default function CrewScreen() {
   return (
-    <Screen>
+    <Screen centered>
       <Text
+        variant="display"
         style={{
-          color: theme.colors.text,
-          ...theme.typography.h1,
+          marginBottom: 20,
         }}
       >
-        Home
+        Crew
       </Text>
+
+      <Button
+        title="Find Friends"
+        onPress={() =>
+          router.push("/search-users")
+        }
+      />
     </Screen>
   );
 }
