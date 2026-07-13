@@ -12,11 +12,18 @@ export default function CrewScreen() {
       <Text
         variant="display"
         style={{
-          marginBottom: 20,
+          marginBottom: 32,
         }}
       >
         Crew
       </Text>
+
+      <Button
+        title="Friend Requests"
+        onPress={() =>
+          router.push("/friend-requests")
+        }
+      />
 
       <Button
         title="Find Friends"
