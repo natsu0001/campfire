@@ -90,4 +90,29 @@ async rejectFriendRequest(id: string) {
 
   return data;
 },
+async getFriends(userId: string) {
+  const { data, error } = await supabase
+    .from("friends")
+    .select(`
+      *,
+      sender:profiles!friends_user_one_fkey(
+        id,
+        username,
+        display_name,
+        avatar_url
+      ),
+      receiver:profiles!friends_user_two_fkey(
+        id,
+        username,
+        display_name,
+        avatar_url
+      )
+    `)
+    .eq("status", "accepted")
+    .or(`sender_id.eq.${userId},receiver_id.eq.${userId}`);
+
+  if (error) throw error;
+
+  return data;
+},
 };
