@@ -1,18 +1,24 @@
 import { View } from "react-native";
 
-import { Text } from "@/components/ui";
+import { Button, Text } from "@/components/ui";
 import { useTheme } from "@/theme";
 
-import { FriendUser } from "../types";
+import { FriendRequest } from "../types";
+
+import { useAcceptFriendRequest } from "../hooks/useAcceptFriendRequest";
+import { useRejectFriendRequest } from "../hooks/useRejectFriendRequest";
 
 interface Props {
-  request: FriendUser;
+  request: FriendRequest;
 }
 
 export default function FriendRequestCard({
   request,
 }: Props) {
   const { colors, spacing, radius } = useTheme();
+
+  const acceptMutation = useAcceptFriendRequest();
+  const rejectMutation = useRejectFriendRequest();
 
   return (
     <View
@@ -27,9 +33,41 @@ export default function FriendRequestCard({
         {request.sender.display_name}
       </Text>
 
-      <Text variant="caption">
+      <Text
+        variant="caption"
+        style={{
+          marginBottom: spacing.lg,
+        }}
+      >
         @{request.sender.username}
       </Text>
+
+      <View
+        style={{
+          flexDirection: "row",
+          gap: spacing.md,
+        }}
+      >
+        <View style={{ flex: 1 }}>
+          <Button
+            title="Accept"
+            loading={acceptMutation.isPending}
+            onPress={() =>
+              acceptMutation.mutate(request.id)
+            }
+          />
+        </View>
+
+        <View style={{ flex: 1 }}>
+          <Button
+            title="Reject"
+            loading={rejectMutation.isPending}
+            onPress={() =>
+              rejectMutation.mutate(request.id)
+            }
+          />
+        </View>
+      </View>
     </View>
   );
 }

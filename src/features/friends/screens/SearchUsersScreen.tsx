@@ -2,10 +2,10 @@ import { useState } from "react";
 import { FlatList, View } from "react-native";
 
 import {
-    Button,
-    Input,
-    Screen,
-    Text,
+  Button,
+  Input,
+  Screen,
+  Text,
 } from "@/components/ui";
 
 import { useAuthStore } from "@/store/auth.store";
@@ -68,17 +68,25 @@ export default function SearchUsersScreen() {
             </View>
 
             <Button
-              title="Add"
-              loading={sendRequest.isPending}
-              onPress={() => {
-                if (!user) return;
+  title="Add"
+  loading={sendRequest.isPending}
+  onPress={() => {
+    console.log("ADD BUTTON PRESSED");
 
-                sendRequest.mutate({
-                  senderId: user.id,
-                  receiverId: item.id,
-                });
-              }}
-            />
+    if (!user) {
+      console.log("NO USER");
+      return;
+    }
+
+    console.log("Sender:", user.id);
+    console.log("Receiver:", item.id);
+
+    sendRequest.mutate({
+      senderId: user.id,
+      receiverId: item.id,
+    });
+  }}
+/>
           </View>
         )}
       />

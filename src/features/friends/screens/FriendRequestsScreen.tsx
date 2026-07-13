@@ -1,7 +1,6 @@
 import { FlatList } from "react-native";
 
 import { Screen, Text } from "@/components/ui";
-
 import { useAuthStore } from "@/store/auth.store";
 
 import FriendRequestCard from "../components/FriendRequestCard";
@@ -10,11 +9,34 @@ import { useFriendRequests } from "../hooks/useFriendRequests";
 export default function FriendRequestsScreen() {
   const user = useAuthStore((s) => s.user);
 
-  const { data = [] } = useFriendRequests(user?.id ?? "");
+  const {
+    data = [],
+    isLoading,
+    error,
+  } = useFriendRequests(user?.id ?? "");
+
+  if (isLoading) {
+    return (
+      <Screen centered>
+        <Text>Loading...</Text>
+      </Screen>
+    );
+  }
+
+  if (error) {
+    return (
+      <Screen centered>
+        <Text>Something went wrong.</Text>
+      </Screen>
+    );
+  }
 
   return (
     <Screen>
-      <Text variant="display">
+      <Text
+        variant="display"
+        style={{ marginBottom: 24 }}
+      >
         Friend Requests
       </Text>
 
@@ -24,6 +46,17 @@ export default function FriendRequestsScreen() {
         renderItem={({ item }) => (
           <FriendRequestCard request={item} />
         )}
+        ListEmptyComponent={
+          <Text
+            variant="body"
+            style={{
+              marginTop: 24,
+              textAlign: "center",
+            }}
+          >
+            No pending friend requests.
+          </Text>
+        }
       />
     </Screen>
   );

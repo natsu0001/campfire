@@ -15,28 +15,35 @@ export const friendService = {
     return data as FriendUser[];
   },
 
-  async sendRequest(senderId: string, receiverId: string) {
-    const { data, error } = await supabase
-      .from("friends")
-      .insert({
-        sender_id: senderId,
-        receiver_id: receiverId,
-        status: "pending",
-      })
-      .select()
-      .single();
+async sendRequest(senderId: string, receiverId: string) {
+  console.log("===== SEND REQUEST =====");
+  console.log("Sender:", senderId);
+  console.log("Receiver:", receiverId);
 
-    if (error) throw error;
-
-    return data;
-  },
-
-  async getFriendRequests(userId: string) {
   const { data, error } = await supabase
+    .from("friends")
+    .insert({
+      sender_id: senderId,
+      receiver_id: receiverId,
+      status: "pending",
+    })
+    .select()
+    .single();
+
+  console.log("INSERT DATA:", data);
+  console.log("INSERT ERROR:", error);
+
+  if (error) throw error;
+
+  return data;
+},
+
+async getFriendRequests(userId: string) {
+  const query = supabase
     .from("friends")
     .select(`
       *,
-      sender:profiles!friends_sender_id_fkey(
+      sender:profiles!friends_user_one_fkey(
         id,
         username,
         display_name,
@@ -46,7 +53,12 @@ export const friendService = {
     .eq("receiver_id", userId)
     .eq("status", "pending");
 
-  if (error) throw error;
+  console.log(query);
+
+  const { data, error } = await query;
+
+  console.log("DATA:", JSON.stringify(data, null, 2));
+  console.log("ERROR:", error);
 
   return data;
 },

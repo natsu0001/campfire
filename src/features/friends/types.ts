@@ -1,5 +1,15 @@
 export interface FriendUser {
- id: string;
+  id: string;
+
+  username: string;
+
+  display_name: string;
+
+  avatar_url: string | null;
+}
+
+export interface FriendRequest {
+  id: string;
 
   sender_id: string;
 
@@ -9,10 +19,5 @@ export interface FriendUser {
 
   created_at: string;
 
-  sender: {
-    id: string;
-    username: string;
-    display_name: string;
-    avatar_url: string | null;
-  };
+  sender: FriendUser;
 }
