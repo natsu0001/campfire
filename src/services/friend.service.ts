@@ -30,4 +30,24 @@ export const friendService = {
 
     return data;
   },
+
+  async getFriendRequests(userId: string) {
+  const { data, error } = await supabase
+    .from("friends")
+    .select(`
+      *,
+      sender:profiles!friends_sender_id_fkey(
+        id,
+        username,
+        display_name,
+        avatar_url
+      )
+    `)
+    .eq("receiver_id", userId)
+    .eq("status", "pending");
+
+  if (error) throw error;
+
+  return data;
+},
 };

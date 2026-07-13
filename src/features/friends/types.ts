@@ -1,9 +1,18 @@
 export interface FriendUser {
-  id: string;
+ id: string;
 
-  username: string;
+  sender_id: string;
 
-  display_name: string;
+  receiver_id: string;
 
-  avatar_url: string | null;
+  status: string;
+
+  created_at: string;
+
+  sender: {
+    id: string;
+    username: string;
+    display_name: string;
+    avatar_url: string | null;
+  };
 }
