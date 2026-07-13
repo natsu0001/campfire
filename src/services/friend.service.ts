@@ -50,4 +50,32 @@ export const friendService = {
 
   return data;
 },
+async acceptFriendRequest(id: string) {
+  const { data, error } = await supabase
+    .from("friends")
+    .update({
+      status: "accepted",
+    })
+    .eq("id", id)
+    .select()
+    .single();
+
+  if (error) throw error;
+
+  return data;
+},
+async rejectFriendRequest(id: string) {
+  const { data, error } = await supabase
+    .from("friends")
+    .update({
+      status: "rejected",
+    })
+    .eq("id", id)
+    .select()
+    .single();
+
+  if (error) throw error;
+
+  return data;
+},
 };
