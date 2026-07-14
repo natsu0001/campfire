@@ -20,10 +20,6 @@ export const friendService = {
   },
 
 async sendRequest(senderId: string, receiverId: string) {
-  console.log("===== SEND REQUEST =====");
-  console.log("Sender:", senderId);
-  console.log("Receiver:", receiverId);
-
   const { data, error } = await supabase
     .from("friends")
     .insert({
@@ -33,9 +29,6 @@ async sendRequest(senderId: string, receiverId: string) {
     })
     .select()
     .single();
-
-  console.log("INSERT DATA:", data);
-  console.log("INSERT ERROR:", error);
 
   if (error) throw error;
 
@@ -77,18 +70,12 @@ async acceptFriendRequest(id: string) {
   return data;
 },
 async rejectFriendRequest(id: string) {
-  const { data, error } = await supabase
+  const { error } = await supabase
     .from("friends")
-    .update({
-      status: "rejected",
-    })
-    .eq("id", id)
-    .select()
-    .single();
+    .delete()
+    .eq("id", id);
 
   if (error) throw error;
-
-  return data;
 },
 async getFriends(userId: string) {
   const { data, error } = await supabase
