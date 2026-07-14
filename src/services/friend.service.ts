@@ -115,4 +115,15 @@ async getFriends(userId: string) {
 
   return data as Friend[];
 },
+
+async getRelationships(userId: string) {
+  const { data, error } = await supabase
+    .from("friends")
+    .select("*")
+    .or(`sender_id.eq.${userId},receiver_id.eq.${userId}`);
+
+  if (error) throw error;
+
+  return data;
+},
 };
