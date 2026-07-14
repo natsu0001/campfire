@@ -1,4 +1,8 @@
-import { FriendUser } from "@/features/friends/types";
+import {
+  Friend,
+  FriendRequest,
+  Profile,
+} from "@/features/friends/types";
 import { supabase } from "@/lib/supabase";
     
 export const friendService = {
@@ -12,7 +16,7 @@ export const friendService = {
 
     if (error) throw error;
 
-    return data as FriendUser[];
+    return data as Profile[];
   },
 
 async sendRequest(senderId: string, receiverId: string) {
@@ -39,7 +43,7 @@ async sendRequest(senderId: string, receiverId: string) {
 },
 
 async getFriendRequests(userId: string) {
-  const query = supabase
+  const { data, error } = await supabase
     .from("friends")
     .select(`
       *,
@@ -53,15 +57,11 @@ async getFriendRequests(userId: string) {
     .eq("receiver_id", userId)
     .eq("status", "pending");
 
-  console.log(query);
+  if (error) throw error;
 
-  const { data, error } = await query;
-
-  console.log("DATA:", JSON.stringify(data, null, 2));
-  console.log("ERROR:", error);
-
-  return data;
+  return data as FriendRequest[];
 },
+
 async acceptFriendRequest(id: string) {
   const { data, error } = await supabase
     .from("friends")
@@ -113,6 +113,6 @@ async getFriends(userId: string) {
 
   if (error) throw error;
 
-  return data;
+  return data as Friend[];
 },
 };

@@ -1,4 +1,4 @@
-export interface FriendUser {
+export interface Profile {
   id: string;
 
   username: string;
@@ -19,5 +19,21 @@ export interface FriendRequest {
 
   created_at: string;
 
-  sender: FriendUser;
+  sender: Profile;
+}
+
+export interface Friend {
+  id: string;
+
+  sender_id: string;
+
+  receiver_id: string;
+
+  status: string;
+
+  created_at: string;
+
+  sender: Profile;
+
+  receiver: Profile;
 }
