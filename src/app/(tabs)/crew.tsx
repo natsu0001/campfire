@@ -1,5 +1,5 @@
 import { router } from "expo-router";
-import { FlatList } from "react-native";
+import { FlatList, View } from "react-native";
 
 import {
   Button,
@@ -34,25 +34,44 @@ export default function CrewScreen() {
       </Text>
 
       <FlatList
-        data={data}
-        keyExtractor={(item) => item.id}
-        ListEmptyComponent={
-          <Text>No friends yet.</Text>
-        }
-        renderItem={({ item }) => {
-          const friend =
-            item.sender.id === user?.id
-              ? item.receiver
-              : item.sender;
+  data={data}
+  keyExtractor={(item) => item.id}
+  ListEmptyComponent={
+    <View
+      style={{
+        alignItems: "center",
+        marginTop: 40,
+      }}
+    >
+      <Text variant="h3">
+        👥 No friends yet
+      </Text>
 
-          return (
-            <FriendCard
-              name={friend.display_name}
-              username={friend.username}
-            />
-          );
+      <Text
+        variant="caption"
+        style={{
+          marginTop: 8,
+          textAlign: "center",
         }}
+      >
+        Find friends to start chatting.
+      </Text>
+    </View>
+  }
+  renderItem={({ item }) => {
+    const friend =
+      item.sender.id === user?.id
+        ? item.receiver
+        : item.sender;
+
+    return (
+      <FriendCard
+        name={friend.display_name}
+        username={friend.username}
       />
+    );
+  }}
+/>
 
       <Button
         title="Friend Requests"

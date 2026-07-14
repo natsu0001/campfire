@@ -1,4 +1,4 @@
-import { FlatList } from "react-native";
+import { FlatList, View } from "react-native";
 
 import { Screen, Text } from "@/components/ui";
 import { useAuthStore } from "@/store/auth.store";
@@ -40,24 +40,35 @@ export default function FriendRequestsScreen() {
         Friend Requests
       </Text>
 
-      <FlatList
-        data={data}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (
-          <FriendRequestCard request={item} />
-        )}
-        ListEmptyComponent={
-          <Text
-            variant="body"
-            style={{
-              marginTop: 24,
-              textAlign: "center",
-            }}
-          >
-            No pending friend requests.
-          </Text>
-        }
-      />
+     <FlatList
+  data={data}
+  keyExtractor={(item) => item.id}
+  renderItem={({ item }) => (
+    <FriendRequestCard request={item} />
+  )}
+  ListEmptyComponent={
+    <View
+      style={{
+        alignItems: "center",
+        marginTop: 40,
+      }}
+    >
+      <Text variant="h3">
+        📨 No pending requests
+      </Text>
+
+      <Text
+        variant="caption"
+        style={{
+          marginTop: 8,
+          textAlign: "center",
+        }}
+      >
+        New friend requests will appear here.
+      </Text>
+    </View>
+  }
+/>
     </Screen>
   );
 }
