@@ -63,7 +63,7 @@ export function Button({
 const getStyles = (theme: ReturnType<typeof useTheme>) =>
   StyleSheet.create({
     base: {
-      width: "100%",
+      
       height: 54,
       borderRadius: radius.lg,
       justifyContent: "center",
