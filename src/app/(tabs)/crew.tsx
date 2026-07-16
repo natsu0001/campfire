@@ -66,9 +66,10 @@ export default function CrewScreen() {
 
     return (
       <FriendCard
-        name={friend.display_name}
-        username={friend.username}
-      />
+  id={friend.id}
+  name={friend.display_name}
+  username={friend.username}
+/>
     );
   }}
 />

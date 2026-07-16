@@ -1,6 +1,6 @@
 import {
-    ConversationListItem,
-    Message,
+  ConversationListItem,
+  Message,
 } from "@/features/messages/types";
 
 import { supabase } from "@/lib/supabase";
@@ -69,5 +69,11 @@ export const messageService = {
   if (error) throw error;
 
   return data;
+},
+async getOrCreateConversation(
+  currentUserId: string,
+  friendId: string
+) {
+  // we'll build this next
 },
 };

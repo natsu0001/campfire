@@ -1,14 +1,17 @@
+import { router } from "expo-router";
 import { View } from "react-native";
 
-import { Text } from "@/components/ui";
+import { Button, Text } from "@/components/ui";
 import { useTheme } from "@/theme";
 
 interface Props {
+  id: string;
   name: string;
   username: string;
 }
 
 export default function FriendCard({
+  id,
   name,
   username,
 }: Props) {
@@ -28,6 +31,11 @@ export default function FriendCard({
       <Text variant="caption">
         @{username}
       </Text>
+
+      <Button
+        title="Chat"
+        onPress={() => router.push(`/chat/${id}`)}
+      />
     </View>
   );
 }
