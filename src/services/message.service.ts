@@ -72,11 +72,16 @@ async getOrCreateConversation(
   return data as Message[];
 },
 
-  async sendMessage(
+async sendMessage(
   conversationId: string,
   senderId: string,
   content: string
 ) {
+  console.log("===== SEND MESSAGE =====");
+  console.log("Conversation:", conversationId);
+  console.log("Sender:", senderId);
+  console.log("Content:", content);
+
   const { data, error } = await supabase
     .from("messages")
     .insert({
@@ -88,6 +93,9 @@ async getOrCreateConversation(
     })
     .select()
     .single();
+
+  console.log("MESSAGE DATA:", data);
+  console.log("MESSAGE ERROR:", error);
 
   if (error) throw error;
 
