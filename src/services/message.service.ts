@@ -74,6 +74,67 @@ async getOrCreateConversation(
   currentUserId: string,
   friendId: string
 ) {
-  // we'll build this next
+  // 1. Get all conversations for current user
+  const { data: myConversations, error } = await supabase
+    .from("conversation_members")
+    .select(`
+      conversation_id,
+      conversations(
+        id,
+        created_at,
+        type
+      )
+    `)
+    .eq("user_id", currentUserId);
+
+  if (error) throw error;
+
+  // 2. Check whether friend belongs to one of them
+  for (const item of myConversations ?? []) {
+    const { data: members } = await supabase
+      .from("conversation_members")
+      .select("user_id")
+      .eq("conversation_id", item.conversation_id);
+
+    const ids = members?.map((m) => m.user_id) ?? [];
+
+    if (
+      ids.includes(currentUserId) &&
+      ids.includes(friendId) &&
+      ids.length === 2
+    ) {
+      return item.conversation_id;
+    }
+  }
+
+  // 3. Create conversation
+  const { data: conversation, error: conversationError } =
+    await supabase
+      .from("conversations")
+      .insert({
+        type: "dm",
+      })
+      .select()
+      .single();
+
+  if (conversationError) throw conversationError;
+
+  // 4. Add both members
+  const { error: memberError } = await supabase
+    .from("conversation_members")
+    .insert([
+      {
+        conversation_id: conversation.id,
+        user_id: currentUserId,
+      },
+      {
+        conversation_id: conversation.id,
+        user_id: friendId,
+      },
+    ]);
+
+  if (memberError) throw memberError;
+
+  return conversation.id;
 },
 };
