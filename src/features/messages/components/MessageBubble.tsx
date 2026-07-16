@@ -33,12 +33,26 @@ export default function MessageBubble({
       }}
     >
       {!isMine && (
-        <Text variant="caption">
+        <Text
+          variant="caption"
+          style={{
+            marginBottom: 4,
+            color: colors.primary,
+          }}
+        >
           {message.sender.display_name}
         </Text>
       )}
 
-      <Text>{message.content}</Text>
+      <Text
+        style={{
+          color: isMine
+            ? "#fff"
+            : colors.text,
+        }}
+      >
+        {message.content}
+      </Text>
     </View>
   );
 }

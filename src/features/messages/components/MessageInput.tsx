@@ -24,41 +24,43 @@ export default function MessageInput({
   const sendMessage = useSendMessage();
 
   return (
-    <View
-      style={{
-        flexDirection: "row",
-        alignItems: "center",
-        gap: 8,
-      }}
-    >
-      <View style={{ flex: 1 }}>
-        <Input
-          value={text}
-          placeholder="Type a message..."
-          onChangeText={setText}
-        />
-      </View>
+   <View
+  style={{
+    flexDirection: "row",
+    alignItems: "flex-end",
+    paddingVertical: 12,
+    gap: 8,
+  }}
+>
+  <View style={{ flex: 1 }}>
+    <Input
+      value={text}
+      onChangeText={setText}
+      placeholder="Type a message..."
+    />
+  </View>
 
       <Button
-        title="Send"
-        loading={sendMessage.isPending}
-        onPress={() => {
-          if (!user || !text.trim()) return;
+  title="Send"
+  loading={sendMessage.isPending}
+  disabled={!text.trim()}
+  onPress={() => {
+    if (!user) return;
 
-          sendMessage.mutate(
-            {
-              conversationId,
-              senderId: user.id,
-              content: text,
-            },
-            {
-              onSuccess() {
-                setText("");
-              },
-            }
-          );
-        }}
-      />
+    sendMessage.mutate(
+      {
+        conversationId,
+        senderId: user.id,
+        content: text.trim(),
+      },
+      {
+        onSuccess() {
+          setText("");
+        },
+      }
+    );
+  }}
+/>
     </View>
   );
 }
