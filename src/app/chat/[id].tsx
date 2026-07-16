@@ -57,11 +57,9 @@ export default function ChatScreen() {
           }}
           renderItem={({ item }) => (
             <MessageBubble
-              message={item}
-              isMine={
-                item.sender_id === user?.id
-              }
-            />
+    message={item.content ?? ""}
+    isMine={item.sender_id === user?.id}
+/>
           )}
           ListEmptyComponent={
             <View
@@ -85,9 +83,15 @@ export default function ChatScreen() {
         />
 
         <MessageInput
-          loading={sendMessage.isPending}
-          onSend={handleSend}
-        />
+    loading={sendMessage.isPending}
+    onSend={(text) =>
+        sendMessage.mutate({
+            conversationId,
+            senderId: user!.id,
+            content: text,
+        })
+    }
+/>
       </KeyboardAvoidingView>
     </Screen>
   );
