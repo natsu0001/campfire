@@ -33,10 +33,6 @@ export interface Message {
 
   image_url: string | null;
 
-  topic: string;
-
-  extension: string;
-
   created_at: string;
 
   edited_at: string | null;

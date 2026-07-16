@@ -77,25 +77,26 @@ async sendMessage(
   senderId: string,
   content: string
 ) {
-  console.log("===== SEND MESSAGE =====");
-  console.log("Conversation:", conversationId);
-  console.log("Sender:", senderId);
-  console.log("Content:", content);
-
   const { data, error } = await supabase
     .from("messages")
     .insert({
       conversation_id: conversationId,
       sender_id: senderId,
       content,
-      topic: "message",
-      extension: "text",
     })
-    .select()
+    .select(`
+      *,
+      sender:profiles!messages_sender_id_fkey(
+        id,
+        username,
+        display_name,
+        avatar_url
+      )
+    `)
     .single();
 
-  console.log("MESSAGE DATA:", data);
-  console.log("MESSAGE ERROR:", error);
+  console.log("MESSAGE:", data);
+  console.log("ERROR:", error);
 
   if (error) throw error;
 
