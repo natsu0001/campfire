@@ -30,45 +30,107 @@ async getOrCreateConversation(
   currentUserId: string,
   friendId: string
 ) {
-  // Get every conversation the current user belongs to
+  console.log("===== GET OR CREATE CONVERSATION =====");
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  console.log("AUTH USER:", user?.id);
+  console.log("CURRENT USER:", currentUserId);
+  console.log("FRIEND:", friendId);
+
+  // Existing conversations
   const { data: memberships, error } = await supabase
     .from("conversation_members")
     .select("conversation_id")
     .eq("user_id", currentUserId);
 
+  console.log("MEMBERSHIPS:", memberships);
+  console.log("MEMBERSHIPS ERROR:", error);
+
   if (error) throw error;
 
-  if (memberships.length) {
+  if (memberships.length > 0) {
     const ids = memberships.map((m) => m.conversation_id);
 
-    // Check if friend belongs to any of those conversations
-    const { data: friendMemberships, error: memberError } =
-      await supabase
-        .from("conversation_members")
-        .select("conversation_id")
-        .eq("user_id", friendId)
-        .in("conversation_id", ids);
+    console.log("CONVERSATION IDS:", ids);
+
+    const {
+      data: friendMemberships,
+      error: memberError,
+    } = await supabase
+      .from("conversation_members")
+      .select("conversation_id")
+      .eq("user_id", friendId)
+      .in("conversation_id", ids);
+
+    console.log(
+      "FRIEND MEMBERSHIPS:",
+      friendMemberships
+    );
+    console.log(
+      "FRIEND MEMBERSHIPS ERROR:",
+      memberError
+    );
 
     if (memberError) throw memberError;
 
-    if (friendMemberships.length) {
+    if (
+      friendMemberships &&
+      friendMemberships.length > 0
+    ) {
+      console.log(
+        "FOUND EXISTING CONVERSATION:",
+        friendMemberships[0].conversation_id
+      );
+
       return friendMemberships[0].conversation_id;
     }
   }
 
-  // Create conversation
-  const { data: conversation, error: createError } =
-    await supabase
-      .from("conversations")
-      .insert({
-        type: "direct",
-      })
-      .select()
-      .single();
+  console.log("NO CONVERSATION FOUND");
+  console.log("CREATING NEW CONVERSATION...");
 
-  if (createError) throw createError;
+  // ===========================
+  // INSERT ONLY
+  // ===========================
 
-  // Add members
+  const { error: insertError } = await supabase
+    .from("conversations")
+    .insert({
+      type: "direct",
+    });
+
+  console.log("INSERT ERROR:", insertError);
+
+  if (insertError) throw insertError;
+
+  console.log("INSERT SUCCESS");
+
+  // ===========================
+  // FETCH LATEST
+  // ===========================
+
+  const {
+    data: conversation,
+    error: fetchError,
+  } = await supabase
+    .from("conversations")
+    .select("id")
+    .order("created_at", {
+      ascending: false,
+    })
+    .limit(1)
+    .single();
+
+  console.log("LATEST:", conversation);
+  console.log("FETCH ERROR:", fetchError);
+
+  if (fetchError) throw fetchError;
+
+  console.log("ADDING MEMBERS...");
+
   const { error: membersError } = await supabase
     .from("conversation_members")
     .insert([
@@ -82,11 +144,17 @@ async getOrCreateConversation(
       },
     ]);
 
+  console.log("MEMBERS ERROR:", membersError);
+
   if (membersError) throw membersError;
+
+  console.log(
+    "SUCCESS!",
+    conversation.id
+  );
 
   return conversation.id;
 },
-
  async getMessages(conversationId: string) {
   const { data, error } = await supabase
     .from("messages")

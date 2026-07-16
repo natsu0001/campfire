@@ -1,52 +1,63 @@
 import { useState } from "react";
 import { View } from "react-native";
 
-import { Button, Input } from "@/components/ui";
-import { useTheme } from "@/theme";
+import {
+    Button,
+    Input,
+} from "@/components/ui";
+
+import { useAuthStore } from "@/store/auth.store";
+
+import { useSendMessage } from "../hooks/useSendMessage";
 
 interface Props {
-  onSend: (text: string) => void;
-  loading?: boolean;
+  conversationId: string;
 }
 
 export default function MessageInput({
-  onSend,
-  loading,
+  conversationId,
 }: Props) {
-  const { spacing } = useTheme();
+  const user = useAuthStore((s) => s.user);
 
-  const [message, setMessage] = useState("");
+  const [text, setText] = useState("");
 
-  function handleSend() {
-    const text = message.trim();
-
-    if (!text) return;
-
-    onSend(text);
-
-    setMessage("");
-  }
+  const sendMessage = useSendMessage();
 
   return (
     <View
       style={{
         flexDirection: "row",
-        gap: spacing.md,
-        alignItems: "flex-end",
+        alignItems: "center",
+        gap: 8,
       }}
     >
       <View style={{ flex: 1 }}>
         <Input
-          placeholder="Message..."
-          value={message}
-          onChangeText={setMessage}
+          value={text}
+          placeholder="Type a message..."
+          onChangeText={setText}
         />
       </View>
 
       <Button
         title="Send"
-        loading={loading}
-        onPress={handleSend}
+        loading={sendMessage.isPending}
+        onPress={() => {
+          if (!user || !text.trim()) return;
+
+          sendMessage.mutate(
+            {
+              conversationId,
+              senderId: user.id,
+              content: text,
+            },
+            {
+              onSuccess() {
+                setText("");
+              },
+            }
+          );
+        }}
       />
     </View>
   );

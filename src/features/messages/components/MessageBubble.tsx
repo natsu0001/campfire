@@ -1,63 +1,44 @@
 import { View } from "react-native";
 
 import { Text } from "@/components/ui";
+import { useAuthStore } from "@/store/auth.store";
 import { useTheme } from "@/theme";
 
+import { Message } from "../types";
+
 interface Props {
-  message: string;
-  isMine: boolean;
-  time?: string;
+  message: Message;
 }
 
 export default function MessageBubble({
   message,
-  isMine,
-  time,
 }: Props) {
+  const user = useAuthStore((s) => s.user);
+
   const { colors, spacing, radius } = useTheme();
+
+  const isMine = message.sender_id === user?.id;
 
   return (
     <View
       style={{
         alignSelf: isMine ? "flex-end" : "flex-start",
+        backgroundColor: isMine
+          ? colors.primary
+          : colors.surface,
+        padding: spacing.md,
+        borderRadius: radius.lg,
+        marginVertical: spacing.xs,
         maxWidth: "80%",
-        marginBottom: spacing.md,
       }}
     >
-      <View
-        style={{
-          backgroundColor: isMine
-            ? colors.primary
-            : colors.surface,
-          paddingVertical: spacing.md,
-          paddingHorizontal: spacing.lg,
-          borderRadius: radius.xl,
-        }}
-      >
-        <Text
-          style={{
-            color: isMine
-              ? colors.background
-              : colors.text,
-          }}
-        >
-          {message}
-        </Text>
-      </View>
-
-      {time && (
-        <Text
-          variant="caption"
-          style={{
-            marginTop: spacing.xs,
-            textAlign: isMine
-              ? "right"
-              : "left",
-          }}
-        >
-          {time}
+      {!isMine && (
+        <Text variant="caption">
+          {message.sender.display_name}
         </Text>
       )}
+
+      <Text>{message.content}</Text>
     </View>
   );
 }

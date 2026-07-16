@@ -40,29 +40,43 @@ export default function FriendCard({
       </Text>
 
       <Button
-        title="Chat"
-        loading={conversation.isPending}
-        onPress={() => {
-          if (!user) return;
+  title="Chat"
+  loading={conversation.isPending}
+  onPress={() => {
+    if (!user) return;
 
-          conversation.mutate(
-            {
-              currentUserId: user.id,
-              friendId: id,
-            },
-            {
-              onSuccess(conversationId) {
-                router.push({
-                  pathname: "/chat/[id]",
-                  params: {
-                    id: conversationId,
-                  },
-                });
-              },
-            }
+    console.log("Chat button pressed");
+
+    conversation.mutate(
+      {
+        currentUserId: user.id,
+        friendId: id,
+      },
+      {
+        onSuccess(conversationId) {
+          console.log(
+            "Conversation ID:",
+            conversationId
           );
-        }}
-      />
+
+          router.push({
+            pathname: "/chat/[id]",
+            params: {
+              id: conversationId,
+            },
+          });
+        },
+
+        onError(error) {
+          console.log(
+            "Conversation Error:",
+            error
+          );
+        },
+      }
+    );
+  }}
+/>
     </View>
   );
 }
