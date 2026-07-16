@@ -4,6 +4,9 @@ import { View } from "react-native";
 import { Button, Text } from "@/components/ui";
 import { useTheme } from "@/theme";
 
+import { useGetOrCreateConversation } from "@/features/messages/hooks/useGetOrCreateConversation";
+import { useAuthStore } from "@/store/auth.store";
+
 interface Props {
   id: string;
   name: string;
@@ -16,6 +19,10 @@ export default function FriendCard({
   username,
 }: Props) {
   const { colors, spacing, radius } = useTheme();
+
+  const user = useAuthStore((s) => s.user);
+
+  const conversation = useGetOrCreateConversation();
 
   return (
     <View
@@ -34,7 +41,27 @@ export default function FriendCard({
 
       <Button
         title="Chat"
-        onPress={() => router.push(`/chat/${id}`)}
+        loading={conversation.isPending}
+        onPress={() => {
+          if (!user) return;
+
+          conversation.mutate(
+            {
+              currentUserId: user.id,
+              friendId: id,
+            },
+            {
+              onSuccess(conversationId) {
+                router.push({
+                  pathname: "/chat/[id]",
+                  params: {
+                    id: conversationId,
+                  },
+                });
+              },
+            }
+          );
+        }}
       />
     </View>
   );
