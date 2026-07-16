@@ -2,10 +2,10 @@ import { PropsWithChildren } from "react";
 import {
   KeyboardAvoidingView,
   Platform,
-
   ScrollView,
   StyleSheet,
   View,
+  ViewStyle,
 } from "react-native";
 import {
   SafeAreaView,
@@ -17,6 +17,7 @@ interface ScreenProps extends PropsWithChildren {
   scroll?: boolean;
   keyboard?: boolean;
   centered?: boolean;
+  style?: ViewStyle;
 }
 
 export function Screen({
@@ -24,6 +25,7 @@ export function Screen({
   scroll = false,
   keyboard = false,
   centered = false,
+  style,
 }: ScreenProps) {
   const { colors, spacing } = useTheme();
 
