@@ -40,7 +40,7 @@ export default function ChatScreen() {
   };
 
   return (
-    <Screen style={{ paddingBottom: 0 }}>
+    <Screen >
       <KeyboardAvoidingView
         style={{ flex: 1 }}
         behavior={

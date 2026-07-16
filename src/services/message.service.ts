@@ -26,6 +26,66 @@ export const messageService = {
     conversations: item.conversations[0],
   })) as ConversationListItem[];
 },
+async getOrCreateConversation(
+  currentUserId: string,
+  friendId: string
+) {
+  // Get every conversation the current user belongs to
+  const { data: memberships, error } = await supabase
+    .from("conversation_members")
+    .select("conversation_id")
+    .eq("user_id", currentUserId);
+
+  if (error) throw error;
+
+  if (memberships.length) {
+    const ids = memberships.map((m) => m.conversation_id);
+
+    // Check if friend belongs to any of those conversations
+    const { data: friendMemberships, error: memberError } =
+      await supabase
+        .from("conversation_members")
+        .select("conversation_id")
+        .eq("user_id", friendId)
+        .in("conversation_id", ids);
+
+    if (memberError) throw memberError;
+
+    if (friendMemberships.length) {
+      return friendMemberships[0].conversation_id;
+    }
+  }
+
+  // Create conversation
+  const { data: conversation, error: createError } =
+    await supabase
+      .from("conversations")
+      .insert({
+        type: "direct",
+      })
+      .select()
+      .single();
+
+  if (createError) throw createError;
+
+  // Add members
+  const { error: membersError } = await supabase
+    .from("conversation_members")
+    .insert([
+      {
+        conversation_id: conversation.id,
+        user_id: currentUserId,
+      },
+      {
+        conversation_id: conversation.id,
+        user_id: friendId,
+      },
+    ]);
+
+  if (membersError) throw membersError;
+
+  return conversation.id;
+},
 
  async getMessages(conversationId: string) {
   const { data, error } = await supabase
@@ -70,71 +130,5 @@ export const messageService = {
 
   return data;
 },
-async getOrCreateConversation(
-  currentUserId: string,
-  friendId: string
-) {
-  // 1. Get all conversations for current user
-  const { data: myConversations, error } = await supabase
-    .from("conversation_members")
-    .select(`
-      conversation_id,
-      conversations(
-        id,
-        created_at,
-        type
-      )
-    `)
-    .eq("user_id", currentUserId);
 
-  if (error) throw error;
-
-  // 2. Check whether friend belongs to one of them
-  for (const item of myConversations ?? []) {
-    const { data: members } = await supabase
-      .from("conversation_members")
-      .select("user_id")
-      .eq("conversation_id", item.conversation_id);
-
-    const ids = members?.map((m) => m.user_id) ?? [];
-
-    if (
-      ids.includes(currentUserId) &&
-      ids.includes(friendId) &&
-      ids.length === 2
-    ) {
-      return item.conversation_id;
-    }
-  }
-
-  // 3. Create conversation
-  const { data: conversation, error: conversationError } =
-    await supabase
-      .from("conversations")
-      .insert({
-        type: "dm",
-      })
-      .select()
-      .single();
-
-  if (conversationError) throw conversationError;
-
-  // 4. Add both members
-  const { error: memberError } = await supabase
-    .from("conversation_members")
-    .insert([
-      {
-        conversation_id: conversation.id,
-        user_id: currentUserId,
-      },
-      {
-        conversation_id: conversation.id,
-        user_id: friendId,
-      },
-    ]);
-
-  if (memberError) throw memberError;
-
-  return conversation.id;
-},
 };
