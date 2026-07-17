@@ -27,7 +27,7 @@ export default function MessageInput({
    <View
   style={{
     flexDirection: "row",
-    alignItems: "flex-end",
+    alignItems: "center",
      paddingHorizontal: 16,
      paddingVertical: 12,
      gap: 10,
