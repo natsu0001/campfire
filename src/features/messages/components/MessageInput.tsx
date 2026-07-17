@@ -1,10 +1,10 @@
+import {
+  Button,
+  Input,
+} from "@/components/ui";
+import { SendHorizontal } from "lucide-react-native";
 import { useState } from "react";
 import { View } from "react-native";
-
-import {
-    Button,
-    Input,
-} from "@/components/ui";
 
 import { useAuthStore } from "@/store/auth.store";
 
@@ -28,12 +28,17 @@ export default function MessageInput({
   style={{
     flexDirection: "row",
     alignItems: "flex-end",
-    paddingVertical: 12,
-    gap: 8,
+     paddingHorizontal: 16,
+     paddingVertical: 12,
+     gap: 10,
   }}
 >
   <View style={{ flex: 1 }}>
     <Input
+      style={{
+    borderRadius: 24,
+    minHeight: 48,
+     }}
       value={text}
       onChangeText={setText}
       placeholder="Type a message..."
@@ -41,8 +46,14 @@ export default function MessageInput({
   </View>
 
       <Button
-  title="Send"
+  size="icon"
   loading={sendMessage.isPending}
+    icon={
+    <SendHorizontal
+      size={20}
+      color="#fff"
+    />
+  }
   disabled={!text.trim()}
   onPress={() => {
     if (!user) return;

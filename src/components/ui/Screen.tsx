@@ -51,6 +51,7 @@ export function Screen({
       justifyContent: "center",
       alignItems: "center",
     },
+     style,
   ]}
 >
   {children}

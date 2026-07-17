@@ -1,5 +1,4 @@
 import { useLocalSearchParams } from "expo-router";
-import { useRef } from "react";
 import { FlatList, View } from "react-native";
 
 import { Screen, Text } from "@/components/ui";
@@ -9,11 +8,14 @@ import MessageInput from "@/features/messages/components/MessageInput";
 import { useMessages } from "@/features/messages/hooks/useMessages";
 
 export default function ChatScreen() {
-  const { id } = useLocalSearchParams<{ id: string }>();
+  const { id } = useLocalSearchParams<{
+    id: string;
+  }>();
 
-  const { data = [], isLoading } = useMessages(id);
-
-  const flatListRef = useRef<FlatList>(null);
+  const {
+    data = [],
+    isLoading,
+  } = useMessages(id);
 
   if (isLoading) {
     return (
@@ -24,23 +26,22 @@ export default function ChatScreen() {
   }
 
   return (
-    <Screen keyboard>
+    <Screen
+      keyboard
+      style={{ padding: 0 }}
+    >
       <View style={{ flex: 1 }}>
         <FlatList
-          ref={flatListRef}
+          style={{ flex: 1 }}
+          contentContainerStyle={{
+            paddingHorizontal: 16,
+            paddingVertical: 12,
+          }}
           data={data}
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => (
             <MessageBubble message={item} />
           )}
-          contentContainerStyle={{
-            paddingBottom: 16,
-          }}
-          onContentSizeChange={() =>
-            flatListRef.current?.scrollToEnd({
-              animated: true,
-            })
-          }
         />
 
         <MessageInput conversationId={id} />
