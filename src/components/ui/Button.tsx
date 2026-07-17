@@ -13,20 +13,43 @@ import { useTheme } from "@/theme/useTheme";
 
 import { Text } from "./Text";
 
-type Variant = "primary" | "secondary" | "outline" | "ghost" | "danger";
+type Variant =
+  | "primary"
+  | "secondary"
+  | "outline"
+  | "ghost"
+  | "danger";
+
+type Size =
+  | "sm"
+  | "md"
+  | "lg"
+  | "icon";
 
 interface ButtonProps extends PressableProps {
-  title: string;
+  title?: string;
+
+  icon?: React.ReactNode;
+
   loading?: boolean;
+
   variant?: Variant;
+
+  size?: Size;
+
+  fullWidth?: boolean;
+
   style?: StyleProp<ViewStyle>;
 }
 
 export function Button({
   title,
+  icon,
   loading = false,
   variant = "primary",
-  style:userStyle,
+  size = "lg",
+  fullWidth = false,
+  style: userStyle,
   disabled,
   ...props
 }: ButtonProps) {
@@ -39,23 +62,31 @@ export function Button({
   {...props}
   disabled={disabled || loading}
   style={({ pressed }) => [
-    styles.base,
-    styles[variant],
-    pressed && styles.pressed,
-    (disabled || loading) && styles.disabled,
-    userStyle,
-  ]}
+  styles.base,
+  styles[size],
+  styles[variant],
+  fullWidth && { width: "100%" },
+  pressed && styles.pressed,
+  (disabled || loading) && styles.disabled,
+  userStyle,
+]}
 >
-      {loading ? (
-        <ActivityIndicator color={styles.text.color} />
-      ) : (
-        <Text
-          variant="button"
-          style={styles.text}
-        >
-          {title}
-        </Text>
-      )}
+     {loading ? (
+  <ActivityIndicator color="#fff" />
+) : (
+  <>
+    {icon}
+
+    {title && (
+      <Text
+        variant="button"
+        style={styles.text}
+      >
+        {title}
+      </Text>
+    )}
+  </>
+)}
     </Pressable>
   );
 }
@@ -63,14 +94,32 @@ export function Button({
 const getStyles = (theme: ReturnType<typeof useTheme>) =>
   StyleSheet.create({
     base: {
-      width: "100%",
-      height: 54,
-      borderRadius: radius.lg,
-      justifyContent: "center",
-      alignItems: "center",
-      paddingHorizontal: spacing.lg,
-      marginVertical: spacing.sm,
-    },
+  justifyContent: "center",
+  alignItems: "center",
+  flexDirection: "row",
+  borderRadius: radius.lg,
+  gap: spacing.sm,
+},
+sm: {
+  height: 38,
+  paddingHorizontal: spacing.md,
+},
+
+md: {
+  height: 46,
+  paddingHorizontal: spacing.lg,
+},
+
+lg: {
+  height: 54,
+  paddingHorizontal: spacing.xl,
+},
+
+icon: {
+  width: 48,
+  height: 48,
+  borderRadius: 24,
+},
 
     primary: {
       backgroundColor: theme.colors.primary,
