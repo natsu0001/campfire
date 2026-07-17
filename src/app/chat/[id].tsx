@@ -1,25 +1,19 @@
 import { useLocalSearchParams } from "expo-router";
-import {
-    FlatList,
-    KeyboardAvoidingView,
-    Platform,
-} from "react-native";
+import { useRef } from "react";
+import { FlatList, View } from "react-native";
 
 import { Screen, Text } from "@/components/ui";
+
 import MessageBubble from "@/features/messages/components/MessageBubble";
 import MessageInput from "@/features/messages/components/MessageInput";
-
 import { useMessages } from "@/features/messages/hooks/useMessages";
 
 export default function ChatScreen() {
-  const { id } = useLocalSearchParams<{
-    id: string;
-  }>();
+  const { id } = useLocalSearchParams<{ id: string }>();
 
-  const {
-    data = [],
-    isLoading,
-  } = useMessages(id);
+  const { data = [], isLoading } = useMessages(id);
+
+  const flatListRef = useRef<FlatList>(null);
 
   if (isLoading) {
     return (
@@ -30,38 +24,27 @@ export default function ChatScreen() {
   }
 
   return (
-    <KeyboardAvoidingView
-      style={{ flex: 1 }}
-      behavior={
-        Platform.OS === "ios"
-          ? "padding"
-          : undefined
-      }
-    >
-      <Screen style={{ flex: 1 }}>
+    <Screen keyboard>
+      <View style={{ flex: 1 }}>
         <FlatList
+          ref={flatListRef}
           data={data}
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => (
             <MessageBubble message={item} />
           )}
           contentContainerStyle={{
-            padding: 16,
+            paddingBottom: 16,
           }}
-          ListEmptyComponent={
-            <Text
-              style={{
-                textAlign: "center",
-                marginTop: 24,
-              }}
-            >
-              Say hello 👋
-            </Text>
+          onContentSizeChange={() =>
+            flatListRef.current?.scrollToEnd({
+              animated: true,
+            })
           }
         />
 
         <MessageInput conversationId={id} />
-      </Screen>
-    </KeyboardAvoidingView>
+      </View>
+    </Screen>
   );
 }
