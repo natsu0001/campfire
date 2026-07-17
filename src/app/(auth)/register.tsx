@@ -91,6 +91,7 @@ export default function RegisterScreen() {
 
       <Button
         title="Create Account"
+        fullWidth
         loading={isSubmitting}
         onPress={handleSubmit(onSubmit)}
       />

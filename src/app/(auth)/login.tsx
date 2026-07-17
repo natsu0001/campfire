@@ -77,6 +77,7 @@ export default function LoginScreen() {
 
       <Button
         title="Login"
+        fullWidth
         loading={isSubmitting}
         onPress={handleSubmit(onSubmit)}
       />
