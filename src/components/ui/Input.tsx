@@ -15,6 +15,7 @@ import { Text } from "./Text";
 interface InputProps extends TextInputProps {
   label?: string;
   error?: string;
+  noMargin?: boolean;
 }
 
 export function Input({
@@ -22,6 +23,7 @@ export function Input({
   error,
   secureTextEntry,
   style,
+  noMargin = false,
   ...props
 }: InputProps) {
   const { colors, spacing, radius } = useTheme();
@@ -43,7 +45,7 @@ export function Input({
       borderRadius: radius.md,
       backgroundColor: colors.surface,
       paddingHorizontal: spacing.md,
-      marginBottom: spacing.md,
+      
       height: 56,
     },
 
@@ -59,7 +61,12 @@ export function Input({
   });
 
   return (
-    <View style={styles.container}>
+    <View style={[
+    styles.inputWrapper,
+    !noMargin && {
+      marginBottom: spacing.md,
+    },
+  ]}>
       {label && <Text variant="bodySmall">{label}</Text>}
 
       <View style={styles.inputWrapper}>

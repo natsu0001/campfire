@@ -36,9 +36,10 @@ export default function MessageInput({
   <View style={{ flex: 1 }}>
     <Input
       style={{
-    borderRadius: 24,
+    height: 48,
     minHeight: 48,
      }}
+     noMargin
       value={text}
       onChangeText={setText}
       placeholder="Type a message..."
