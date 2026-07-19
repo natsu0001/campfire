@@ -1,11 +1,13 @@
 import { Eye, EyeOff } from "lucide-react-native";
 import { useState } from "react";
 import {
+  StyleProp,
   StyleSheet,
   TextInput,
   TextInputProps,
   TouchableOpacity,
   View,
+  ViewStyle,
 } from "react-native";
 
 import { useTheme } from "@/theme";
@@ -16,6 +18,7 @@ interface InputProps extends TextInputProps {
   label?: string;
   error?: string;
   noMargin?: boolean;
+   containerStyle?: StyleProp<ViewStyle>;
 }
 
 export function Input({
@@ -24,6 +27,7 @@ export function Input({
   secureTextEntry,
   style,
   noMargin = false,
+  containerStyle,
   ...props
 }: InputProps) {
   const { colors, spacing, radius } = useTheme();
@@ -61,12 +65,15 @@ export function Input({
   });
 
   return (
-    <View style={[
+    <View
+  style={[
     styles.inputWrapper,
     !noMargin && {
       marginBottom: spacing.md,
     },
-  ]}>
+    containerStyle,
+  ]}
+>
       {label && <Text variant="bodySmall">{label}</Text>}
 
       <View style={styles.inputWrapper}>
