@@ -102,5 +102,24 @@ async sendMessage(
 
   return data;
 },
+async getConversationDetails(conversationId: string, currentUserId: string) {
+  const { data, error } = await supabase
+    .from("conversation_members")
+    .select(`
+      user_id,
+      profiles(
+        id,
+        username,
+        display_name,
+        avatar_url
+      )
+    `)
+    .eq("conversation_id", conversationId)
+    .neq("user_id", currentUserId);
+
+  if (error) throw error;
+
+  return data[0];
+},
 
 };
