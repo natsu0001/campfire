@@ -54,18 +54,25 @@ export default function FriendCard({
       },
       {
         onSuccess(conversationId) {
-          console.log(
-            "Conversation ID:",
-            conversationId
-          );
+  console.log("Conversation ID:", conversationId);
 
-          router.push({
-            pathname: "/chat/[id]",
-            params: {
-              id: conversationId,
-            },
-          });
-        },
+  console.log("Friend:");
+  console.log({
+    id,
+    name,
+    username,
+  });
+
+  router.push({
+    pathname: "/chat/[id]",
+    params: {
+      id: conversationId,
+      name,
+      username,
+      avatar: "",
+    },
+  });
+},
 
         onError(error) {
           console.log(

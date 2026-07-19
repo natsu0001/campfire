@@ -1,32 +1,49 @@
-import { Screen, Text } from "@/components/ui";
 import { useLocalSearchParams } from "expo-router";
 import { useEffect, useRef } from "react";
 import { FlatList, View } from "react-native";
 
+import { Screen, Text } from "@/components/ui";
+
+import ChatHeader from "@/features/messages/components/ChatHeader";
 import MessageBubble from "@/features/messages/components/MessageBubble";
 import MessageInput from "@/features/messages/components/MessageInput";
 import { useMessages } from "@/features/messages/hooks/useMessages";
 
 export default function ChatScreen() {
-  const { id } = useLocalSearchParams<{
+  const {
+    id,
+    name,
+    username,
+    avatar,
+  } = useLocalSearchParams<{
     id: string;
+    name?: string;
+    username?: string;
+    avatar?: string;
   }>();
+console.log("CHAT PARAMS");
+console.log({
+  id,
+  name,
+  username,
+  avatar,
+});
   const flatListRef = useRef<FlatList>(null);
 
   const {
-    data = [],
+    data: messages = [],
     isLoading,
   } = useMessages(id);
 
   useEffect(() => {
-  if (!data.length) return;
+    if (!messages.length) return;
 
-  requestAnimationFrame(() => {
-    flatListRef.current?.scrollToEnd({
-      animated: true,
+    requestAnimationFrame(() => {
+      flatListRef.current?.scrollToEnd({
+        animated: true,
+      });
     });
-  });
-}, [data]);
+  }, [messages]);
 
   if (isLoading) {
     return (
@@ -37,32 +54,35 @@ export default function ChatScreen() {
   }
 
   return (
-    <Screen
-      keyboard
-      style={{ padding: 0 }}
-    >
+    <Screen keyboard style={{ padding: 0 }}>
       <View style={{ flex: 1 }}>
-       <FlatList
-  ref={flatListRef}
-  style={{ flex: 1 }}
-  data={data}
-  keyExtractor={(item) => item.id}
-  renderItem={({ item }) => (
-    <MessageBubble message={item} />
-  )}
-  contentContainerStyle={{
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    flexGrow: 1,
-  }}
-  keyboardShouldPersistTaps="handled"
-  showsVerticalScrollIndicator={false}
-  onContentSizeChange={() =>
-    flatListRef.current?.scrollToEnd({
-      animated: true,
-    })
-  }
-/>
+        <ChatHeader
+          name={name || "Unknown"}
+          username={username || ""}
+          avatarUrl={avatar || ""}
+        />
+
+        <FlatList
+          ref={flatListRef}
+          data={messages}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item }) => (
+            <MessageBubble message={item} />
+          )}
+          style={{ flex: 1 }}
+          contentContainerStyle={{
+            paddingHorizontal: 16,
+            paddingVertical: 12,
+            flexGrow: 1,
+          }}
+          keyboardShouldPersistTaps="handled"
+          showsVerticalScrollIndicator={false}
+          onContentSizeChange={() =>
+            flatListRef.current?.scrollToEnd({
+              animated: true,
+            })
+          }
+        />
 
         <MessageInput conversationId={id} />
       </View>

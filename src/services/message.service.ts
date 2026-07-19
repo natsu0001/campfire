@@ -102,7 +102,10 @@ async sendMessage(
 
   return data;
 },
-async getConversationDetails(conversationId: string, currentUserId: string) {
+async getConversationDetails(
+  conversationId: string,
+  currentUserId: string
+) {
   const { data, error } = await supabase
     .from("conversation_members")
     .select(`
@@ -117,9 +120,14 @@ async getConversationDetails(conversationId: string, currentUserId: string) {
     .eq("conversation_id", conversationId)
     .neq("user_id", currentUserId);
 
+  console.log("DETAILS DATA:", data);
+  console.log("DETAILS ERROR:", error);
+
   if (error) throw error;
 
-  return data[0];
+  return data?.[0] ?? null;
 },
+
+
 
 };
