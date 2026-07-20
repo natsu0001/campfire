@@ -2,7 +2,7 @@ import { useLocalSearchParams } from "expo-router";
 import { useEffect, useRef } from "react";
 import { FlatList, Keyboard, TouchableWithoutFeedback, View, } from "react-native";
 
-import { Screen, Text } from "@/components/ui";
+import { EmptyState, Screen, Text } from "@/components/ui";
 
 import ChatHeader from "@/features/messages/components/ChatHeader";
 import MessageBubble from "@/features/messages/components/MessageBubble";
@@ -73,6 +73,12 @@ accessible={false}
           renderItem={({ item }) => (
             <MessageBubble message={item} />
           )}
+          ListEmptyComponent={
+    <EmptyState
+      title="No messages yet"
+      description="Send the first message to start the conversation."
+    />
+  }
           style={{ flex: 1 }}
           contentContainerStyle={{
             paddingHorizontal: 16,
