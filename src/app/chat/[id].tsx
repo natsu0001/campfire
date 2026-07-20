@@ -2,11 +2,12 @@ import { useLocalSearchParams } from "expo-router";
 import { useEffect, useRef } from "react";
 import { FlatList, Keyboard, TouchableWithoutFeedback, View, } from "react-native";
 
-import { EmptyState, Screen, Text } from "@/components/ui";
+import { EmptyState, Screen } from "@/components/ui";
 
 import ChatHeader from "@/features/messages/components/ChatHeader";
 import MessageBubble from "@/features/messages/components/MessageBubble";
 import MessageInput from "@/features/messages/components/MessageInput";
+import MessageSkeleton from "@/features/messages/components/MessageSkeleton";
 import { useMessages } from "@/features/messages/hooks/useMessages";
 
 export default function ChatScreen() {
@@ -47,9 +48,13 @@ useEffect(() => {
 
   if (isLoading) {
     return (
-      <Screen centered>
-        <Text>Loading...</Text>
-      </Screen>
+     <Screen>
+      <MessageSkeleton />
+      <MessageSkeleton />
+      <MessageSkeleton />
+      <MessageSkeleton />
+      <MessageSkeleton />
+    </Screen>
     );
   }
 

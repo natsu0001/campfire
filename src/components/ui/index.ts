@@ -8,3 +8,4 @@ export { default as Loader } from "./Loader";
 export * from "./Screen";
 export * from "./Text";
 
+export * from "./Skeleton";
