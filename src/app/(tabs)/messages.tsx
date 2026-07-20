@@ -29,23 +29,24 @@ const {
   data={data}
   keyExtractor={(item) => item.conversation_id}
   renderItem={({ item }) => (
-    <ConversationCard
-      name={item.display_name}
-      username={item.username}
-      avatarUrl={item.avatar_url}
-      lastMessage={item.last_message ?? ""}
-      onPress={() =>
-        router.push({
-          pathname: "/chat/[id]",
-          params: {
-            id: item.conversation_id,
-            name: item.display_name,
-            username: item.username,
-            avatar: item.avatar_url ?? "",
-          },
-        })
-      }
-    />
+   <ConversationCard
+  name={item.display_name}
+  username={item.username}
+  avatarUrl={item.avatar_url}
+  lastMessage={item.last_message}
+  lastMessageTime={item.last_message_time}
+  onPress={() =>
+    router.push({
+      pathname: "/chat/[id]",
+      params: {
+        id: item.conversation_id,
+        name: item.display_name,
+        username: item.username,
+        avatar: item.avatar_url ?? "",
+      },
+    })
+  }
+/>
   )}
 />
     </Screen>
