@@ -1,7 +1,17 @@
 export interface Conversation {
-  id: string;
-  created_at: string;
-  type: string;
+  conversation_id: string;
+
+  friend_id: string;
+
+  display_name: string;
+
+  username: string;
+
+  avatar_url: string | null;
+
+  last_message: string | null;
+
+  last_message_time: string | null;
 }
 
 export interface ConversationMember {

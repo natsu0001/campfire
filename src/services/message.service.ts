@@ -1,30 +1,21 @@
 import {
-  ConversationListItem,
-  Message,
+  Message
 } from "@/features/messages/types";
 
 import { supabase } from "@/lib/supabase";
 
 export const messageService = {
-  async getConversations(userId: string) {
-  const { data, error } = await supabase
-    .from("conversation_members")
-    .select(`
-      conversation_id,
-      conversations(
-        id,
-        created_at,
-        type
-      )
-    `)
-    .eq("user_id", userId);
+async getConversations(userId: string) {
+  const { data, error } = await supabase.rpc(
+    "get_user_conversations",
+    {
+      p_user: userId,
+    }
+  );
 
   if (error) throw error;
 
-  return (data ?? []).map((item) => ({
-    conversation_id: item.conversation_id,
-    conversations: item.conversations[0],
-  })) as ConversationListItem[];
+  return data ?? [];
 },
 async getOrCreateConversation(
   currentUserId: string,
