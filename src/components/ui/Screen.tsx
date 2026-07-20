@@ -69,11 +69,12 @@ export function Screen({
     >
       {keyboard ? (
         <KeyboardAvoidingView
-          style={styles.flex}
-          behavior={Platform.OS === "ios" ? "padding" : undefined}
-        >
-          {content}
-        </KeyboardAvoidingView>
+  style={styles.flex}
+  behavior={Platform.OS === "ios" ? "padding" : "height"}
+  keyboardVerticalOffset={0}
+>
+  {content}
+</KeyboardAvoidingView>
       ) : (
         content
       )}

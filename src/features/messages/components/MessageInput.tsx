@@ -8,8 +8,8 @@ import { View } from "react-native";
 
 import { useAuthStore } from "@/store/auth.store";
 
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useSendMessage } from "../hooks/useSendMessage";
-
 interface Props {
   conversationId: string;
 }
@@ -18,7 +18,7 @@ export default function MessageInput({
   conversationId,
 }: Props) {
   const user = useAuthStore((s) => s.user);
-
+const insets = useSafeAreaInsets();
   const [text, setText] = useState("");
 
   const sendMessage = useSendMessage();
@@ -28,9 +28,17 @@ export default function MessageInput({
   style={{
     flexDirection: "row",
     alignItems: "center",
-     paddingHorizontal: 16,
-     paddingVertical: 12,
-     gap: 10,
+
+    paddingHorizontal: 16,
+    paddingTop: 10,
+    paddingBottom: Math.max(insets.bottom, 10),
+
+    gap: 10,
+
+    borderTopWidth: 1,
+    borderTopColor: "#333",
+
+    backgroundColor: "#111",
   }}
 >
   <View style={{ flex: 1 }}>

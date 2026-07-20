@@ -1,6 +1,6 @@
 import { useLocalSearchParams } from "expo-router";
 import { useEffect, useRef } from "react";
-import { FlatList, View } from "react-native";
+import { FlatList, Keyboard, TouchableWithoutFeedback, View, } from "react-native";
 
 import { Screen, Text } from "@/components/ui";
 
@@ -35,15 +35,15 @@ console.log({
     isLoading,
   } = useMessages(id);
 
-  useEffect(() => {
+useEffect(() => {
     if (!messages.length) return;
 
-    requestAnimationFrame(() => {
-      flatListRef.current?.scrollToEnd({
-        animated: true,
-      });
-    });
-  }, [messages]);
+    setTimeout(() => {
+        flatListRef.current?.scrollToEnd({
+            animated: true,
+        });
+    }, 100);
+}, [messages]);
 
   if (isLoading) {
     return (
@@ -55,6 +55,10 @@ console.log({
 
   return (
     <Screen keyboard style={{ padding: 0 }}>
+      <TouchableWithoutFeedback
+onPress={Keyboard.dismiss}
+accessible={false}
+>
       <View style={{ flex: 1 }}>
         <ChatHeader
           name={name || "Unknown"}
@@ -72,10 +76,11 @@ console.log({
           style={{ flex: 1 }}
           contentContainerStyle={{
             paddingHorizontal: 16,
-            paddingVertical: 12,
+            paddingTop:12,
+            paddingBottom:20,
             flexGrow: 1,
           }}
-          keyboardShouldPersistTaps="handled"
+          keyboardShouldPersistTaps="always"
           showsVerticalScrollIndicator={false}
           onContentSizeChange={() =>
             flatListRef.current?.scrollToEnd({
@@ -86,6 +91,7 @@ console.log({
 
         <MessageInput conversationId={id} />
       </View>
+      </TouchableWithoutFeedback>
     </Screen>
   );
 }
