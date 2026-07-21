@@ -8,9 +8,11 @@ import MessageBubble from "@/features/messages/components/MessageBubble";
 import MessageInput from "@/features/messages/components/MessageInput";
 import MessageSkeleton from "@/features/messages/components/MessageSkeleton";
 import { useMessages } from "@/features/messages/hooks/useMessages";
+import { usePresence } from "@/features/messages/hooks/usePresence";
 import { useRealtimeMessages } from "@/features/messages/hooks/useRealtimeMessages";
-
+import { useAuthStore } from "@/store/auth.store";
 export default function ChatScreen() {
+
   const {
     id,
     name,
@@ -22,7 +24,20 @@ export default function ChatScreen() {
     username?: string;
     avatar?: string;
   }>();
+    const user = useAuthStore((s) => s.user);
+
+const {
+  onlineUsers,
+  typingUsers,
+  startTyping,
+} = usePresence(
+  id,
+  user?.id ?? ""
+);
+
 console.log("CHAT PARAMS");
+console.log("ONLINE USERS:", onlineUsers);
+console.log("TYPING USERS:", typingUsers);
 console.log({
   id,
   name,
@@ -66,11 +81,23 @@ onPress={Keyboard.dismiss}
 accessible={false}
 >
       <View style={{ flex: 1 }}>
-        <ChatHeader
-          name={name || "Unknown"}
-          username={username || ""}
-          avatarUrl={avatar || ""}
-        />
+<ChatHeader
+  name={name || "Unknown"}
+  username={username || ""}
+  avatarUrl={avatar || ""}
+  online={
+    !!user &&
+    onlineUsers.some(
+      uid => uid !== user.id
+    )
+  }
+  typing={
+    !!user &&
+    typingUsers.some(
+      uid => uid !== user.id
+    )
+  }
+/>
 
         <FlatList
           ref={flatListRef}
@@ -101,7 +128,10 @@ accessible={false}
           }
         />
 
-        <MessageInput conversationId={id} />
+        <MessageInput
+  conversationId={id}
+  onTyping={startTyping}
+/>
       </View>
       </TouchableWithoutFeedback>
     </Screen>

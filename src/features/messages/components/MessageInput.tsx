@@ -10,12 +10,13 @@ import { useAuthStore } from "@/store/auth.store";
 
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useSendMessage } from "../hooks/useSendMessage";
+
 interface Props {
   conversationId: string;
+  onTyping?: () => void;
 }
-
 export default function MessageInput({
-  conversationId,
+  conversationId, onTyping,
 }: Props) {
   const user = useAuthStore((s) => s.user);
 const insets = useSafeAreaInsets();
@@ -49,7 +50,10 @@ const insets = useSafeAreaInsets();
   }}
      noMargin
       value={text}
-      onChangeText={setText}
+      onChangeText={(value) => {
+  setText(value);
+  onTyping?.();
+}}
       placeholder="Type a message..."
     />
   </View>

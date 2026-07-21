@@ -5,11 +5,15 @@ interface Props {
   name: string;
   username: string;
   avatarUrl?: string;
+  online?: boolean;
+  typing?: boolean;
 }
 
 export default function ChatHeader({
   name,
   username,
+  online = false,
+  typing = false,
 }: Props) {
   return (
     <View
@@ -18,6 +22,8 @@ export default function ChatHeader({
         alignItems: "center",
         paddingHorizontal: 16,
         paddingVertical: 12,
+        borderBottomWidth: 1,
+        borderBottomColor: "#222",
       }}
     >
       <View
@@ -34,9 +40,16 @@ export default function ChatHeader({
         <Text>{name.charAt(0).toUpperCase()}</Text>
       </View>
 
-      <View>
+      <View style={{ flex: 1 }}>
         <Text variant="h3">{name}</Text>
-        <Text variant="caption">@{username}</Text>
+
+        <Text variant="caption">
+          {typing
+            ? "Typing..."
+            : online
+            ? "Online"
+            : `@${username}`}
+        </Text>
       </View>
     </View>
   );
