@@ -1,4 +1,5 @@
 import {
+  Conversation,
   Message
 } from "@/features/messages/types";
 
@@ -7,7 +8,7 @@ import { supabase } from "@/lib/supabase";
 export const messageService = {
 async getConversations(userId: string) {
   const { data, error } = await supabase.rpc(
-    "get_user_conversations",
+    "get_conversations",
     {
       p_user: userId,
     }
@@ -15,7 +16,7 @@ async getConversations(userId: string) {
 
   if (error) throw error;
 
-  return data ?? [];
+  return data as Conversation[];
 },
 async getOrCreateConversation(
   currentUserId: string,
