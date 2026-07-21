@@ -3,12 +3,12 @@ import { useEffect, useRef } from "react";
 import { FlatList, Keyboard, TouchableWithoutFeedback, View, } from "react-native";
 
 import { EmptyState, Screen } from "@/components/ui";
-
 import ChatHeader from "@/features/messages/components/ChatHeader";
 import MessageBubble from "@/features/messages/components/MessageBubble";
 import MessageInput from "@/features/messages/components/MessageInput";
 import MessageSkeleton from "@/features/messages/components/MessageSkeleton";
 import { useMessages } from "@/features/messages/hooks/useMessages";
+import { useRealtimeMessages } from "@/features/messages/hooks/useRealtimeMessages";
 
 export default function ChatScreen() {
   const {
@@ -35,6 +35,7 @@ console.log({
     data: messages = [],
     isLoading,
   } = useMessages(id);
+  useRealtimeMessages(id);
 
 useEffect(() => {
     if (!messages.length) return;
