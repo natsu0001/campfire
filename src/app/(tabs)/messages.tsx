@@ -10,7 +10,7 @@ import {
 import ConversationCard from "@/features/messages/components/ConversationCard";
 import ConversationSkeleton from "@/features/messages/components/ConversationSkeleton";
 import { useConversations } from "@/features/messages/hooks/useConversations";
-
+import { useRealtimeConversations } from "@/features/messages/hooks/useRealtimeConversations";
 import { useAuthStore } from "@/store/auth.store";
 
 export default function MessagesScreen() {
@@ -20,6 +20,7 @@ export default function MessagesScreen() {
     data = [],
     isLoading,
   } = useConversations(user?.id ?? "");
+  useRealtimeConversations();
 
   if (isLoading) {
     return (
