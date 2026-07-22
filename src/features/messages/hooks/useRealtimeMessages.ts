@@ -9,32 +9,29 @@ export function useRealtimeMessages(
 ) {
   const queryClient = useQueryClient();
 
-  useEffect(() => {
-    if (!conversationId) return;
+useEffect(() => {
+  if (!conversationId) return;
 
-    const channel = supabase
-      .channel(`messages:${conversationId}`)
-      .on(
-        "postgres_changes",
-        {
-          event: "INSERT",
-          schema: "public",
-          table: "messages",
-          filter: `conversation_id=eq.${conversationId}`,
-        },
-        () => {
-          queryClient.invalidateQueries({
-            queryKey: [
-              "messages",
-              conversationId,
-            ],
-          });
-        }
-      )
-      .subscribe();
+  const channel = supabase
+    .channel(`messages:${conversationId}`)
+    .on(
+      "postgres_changes",
+      {
+        event: "INSERT",
+        schema: "public",
+        table: "messages",
+        filter: `conversation_id=eq.${conversationId}`,
+      },
+      () => {
+        queryClient.invalidateQueries({
+          queryKey: ["messages", conversationId],
+        });
+      }
+    )
+    .subscribe();
 
-    return () => {
-      supabase.removeChannel(channel);
-    };
-  }, [conversationId]);
+  return () => {
+    void supabase.removeChannel(channel);
+  };
+}, [conversationId, queryClient]);
 }

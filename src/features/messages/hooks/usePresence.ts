@@ -32,6 +32,7 @@ export function usePresence(
       { event: "sync" },
       () => {
         const state = channel.presenceState();
+        setOnlineUsers(Object.keys(state));
 
         // 👇 DEBUG
         console.log("========== PRESENCE ==========");
@@ -56,6 +57,7 @@ console.log("Typing Users:", typing);
       console.log("Presence Status:", status);
 
       if (status === "SUBSCRIBED") {
+        channelRef.current = channel;
         await channel.track({
           online: true,
           typing: false,
@@ -65,9 +67,12 @@ console.log("Typing Users:", typing);
       }
     });
 
-    channelRef.current = channel;
+    
 
     return () => {
+        if (timeoutRef.current) {
+    clearTimeout(timeoutRef.current);
+  }
       supabase.removeChannel(channel);
     };
   }, [conversationId, userId]);
@@ -79,13 +84,19 @@ async function startTyping() {
     clearTimeout(timeoutRef.current);
   }
 
-  await channelRef.current.track({
-    online: true,
-    typing: true,
-  });
+  const state = channelRef.current.presenceState();
+
+  const me = state[userId]?.[0];
+
+  if (!me?.typing) {
+    await channelRef.current.track({
+      online: true,
+      typing: true,
+    });
+  }
 
   timeoutRef.current = setTimeout(async () => {
-    await channelRef.current?.track({
+    await channelRef.current.track({
       online: true,
       typing: false,
     });
