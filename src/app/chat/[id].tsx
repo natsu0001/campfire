@@ -30,6 +30,7 @@ const {
   onlineUsers,
   typingUsers,
   startTyping,
+  stopTyping,
 } = usePresence(
   id,
   user?.id ?? ""
@@ -131,6 +132,8 @@ accessible={false}
         <MessageInput
   conversationId={id}
   onTyping={startTyping}
+  onStopTyping={stopTyping}
+
 />
       </View>
       </TouchableWithoutFeedback>

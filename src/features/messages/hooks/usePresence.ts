@@ -39,12 +39,11 @@ export function usePresence(
 console.log(JSON.stringify(state, null, 2));
 
 const typing = Object.entries(state)
-  .filter(([_, presences]: any) =>
-    presences.some((presence: any) => {
-      console.log("Presence meta:", presence);
-      return presence.typing === true;
-    })
-  )
+  .filter(([_, presences]: any) => {
+    const latest = presences[presences.length - 1];
+
+    return latest?.typing === true;
+  })
   .map(([key]) => key);
 
 console.log("Typing Users:", typing);
@@ -102,10 +101,23 @@ async function startTyping() {
     });
   }, 2000);
 }
+async function stopTyping() {
+  if (!channelRef.current) return;
+
+  if (timeoutRef.current) {
+    clearTimeout(timeoutRef.current);
+  }
+
+  await channelRef.current.track({
+    online: true,
+    typing: false,
+  });
+}
 
   return {
     onlineUsers,
     typingUsers,
     startTyping,
+    stopTyping,
   };
 }

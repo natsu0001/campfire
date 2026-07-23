@@ -13,10 +13,11 @@ import { useSendMessage } from "../hooks/useSendMessage";
 
 interface Props {
   conversationId: string;
-  onTyping?: () => void;
+    onTyping?: () => void | Promise<void>;
+  onStopTyping?: () => void | Promise<void>;
 }
 export default function MessageInput({
-  conversationId, onTyping,
+  conversationId, onTyping, onStopTyping,
 }: Props) {
   const user = useAuthStore((s) => s.user);
 const insets = useSafeAreaInsets();
@@ -78,9 +79,11 @@ const insets = useSafeAreaInsets();
         content: text.trim(),
       },
       {
-        onSuccess() {
-          setText("");
-        },
+       onSuccess: async () => {
+  setText("");
+
+  await onStopTyping?.();
+},
       }
     );
   }}
