@@ -77,12 +77,14 @@ export function Input({
         containerStyle,
       ]}
     >
-      <TextInput
-        {...props}
-        style={[styles.input, style]}
-        placeholderTextColor={colors.textSecondary}
-        secureTextEntry={hidden}
-      />
+     <TextInput
+  {...props}
+  style={[styles.input, style]}
+  placeholderTextColor={colors.textSecondary}
+  secureTextEntry={hidden}
+  multiline={props.multiline}
+  textAlignVertical="top"
+/>
 
       {secureTextEntry && (
         <TouchableOpacity onPress={() => setHidden(!hidden)}>
