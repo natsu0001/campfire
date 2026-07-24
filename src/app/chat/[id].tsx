@@ -9,6 +9,7 @@ import MessageInput from "@/features/messages/components/MessageInput";
 import MessageSkeleton from "@/features/messages/components/MessageSkeleton";
 import { useMessages } from "@/features/messages/hooks/useMessages";
 import { usePresence } from "@/features/messages/hooks/usePresence";
+import { markConversationRead } from "@/features/messages/hooks/useReadConversation";
 import { useRealtimeMessages } from "@/features/messages/hooks/useRealtimeMessages";
 import { useAuthStore } from "@/store/auth.store";
 export default function ChatScreen() {
@@ -52,6 +53,19 @@ console.log({
     isLoading,
   } = useMessages(id);
   useRealtimeMessages(id);
+
+  useEffect(() => {
+  if (!user) return;
+  if (!messages.length) return;
+
+  const lastMessage = messages[messages.length - 1];
+
+  markConversationRead({
+    conversationId: id,
+    userId: user.id,
+    lastMessageId: lastMessage.id,
+  });
+}, [messages, user, id]);
 
 useEffect(() => {
     if (!messages.length) return;
