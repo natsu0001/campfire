@@ -54,18 +54,21 @@ console.log({
   } = useMessages(id);
   useRealtimeMessages(id);
 
-  useEffect(() => {
+useEffect(() => {
   if (!user) return;
   if (!messages.length) return;
 
   const lastMessage = messages[messages.length - 1];
+
+  // Don't update when you send your own message
+  if (lastMessage.sender_id === user.id) return;
 
   markConversationRead({
     conversationId: id,
     userId: user.id,
     lastMessageId: lastMessage.id,
   });
-}, [messages, user, id]);
+}, [messages, user?.id, id]);
 
 useEffect(() => {
     if (!messages.length) return;
