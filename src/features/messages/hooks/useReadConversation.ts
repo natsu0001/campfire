@@ -11,6 +11,14 @@ export async function markConversationRead({
   userId,
   lastMessageId,
 }: Params) {
+
+  console.log("UPSERT");
+  console.log({
+    conversationId,
+    userId,
+    lastMessageId,
+  });
+
   const { error } = await supabase
     .from("conversation_reads")
     .upsert(
@@ -25,7 +33,5 @@ export async function markConversationRead({
       }
     );
 
-  if (error) {
-    console.log("READ ERROR:", error);
-  }
+  console.log("READ ERROR", error);
 }

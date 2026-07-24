@@ -1,7 +1,3 @@
-import { useLocalSearchParams } from "expo-router";
-import { useEffect, useRef } from "react";
-import { FlatList, Keyboard, TouchableWithoutFeedback, View, } from "react-native";
-
 import { EmptyState, Screen } from "@/components/ui";
 import ChatHeader from "@/features/messages/components/ChatHeader";
 import MessageBubble from "@/features/messages/components/MessageBubble";
@@ -10,8 +6,12 @@ import MessageSkeleton from "@/features/messages/components/MessageSkeleton";
 import { useMessages } from "@/features/messages/hooks/useMessages";
 import { usePresence } from "@/features/messages/hooks/usePresence";
 import { markConversationRead } from "@/features/messages/hooks/useReadConversation";
+import { useReadReceipts } from "@/features/messages/hooks/useReadReceipts";
 import { useRealtimeMessages } from "@/features/messages/hooks/useRealtimeMessages";
 import { useAuthStore } from "@/store/auth.store";
+import { useLocalSearchParams } from "expo-router";
+import { useEffect, useRef } from "react";
+import { FlatList, Keyboard, TouchableWithoutFeedback, View, } from "react-native";
 export default function ChatScreen() {
 
   const {
@@ -54,14 +54,26 @@ console.log({
   } = useMessages(id);
   useRealtimeMessages(id);
 
+  const { reads } = useReadReceipts(id);
+
+console.log("READS:", reads);
+
 useEffect(() => {
   if (!user) return;
   if (!messages.length) return;
 
   const lastMessage = messages[messages.length - 1];
 
-  // Don't update when you send your own message
-  if (lastMessage.sender_id === user.id) return;
+  console.log("LAST MESSAGE");
+  console.log(lastMessage.id);
+  console.log(lastMessage.sender_id);
+
+  if (lastMessage.sender_id === user.id) {
+    console.log("Skipping because I sent it");
+    return;
+  }
+
+  console.log("Marking read:", lastMessage.id);
 
   markConversationRead({
     conversationId: id,

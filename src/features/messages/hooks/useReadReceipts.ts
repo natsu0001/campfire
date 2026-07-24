@@ -8,23 +8,36 @@ export function useReadReceipts(conversationId: string) {
     if (!conversationId) return;
 
     async function loadReads() {
-      const { data, error } = await supabase
+      const { data } = await supabase
         .from("conversation_reads")
         .select("*")
         .eq("conversation_id", conversationId);
-
-      if (error) {
-        console.log(error);
-        return;
-      }
 
       setReads(data ?? []);
     }
 
     loadReads();
+
+    const channel = supabase
+      .channel(`reads-${conversationId}`)
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "conversation_reads",
+          filter: `conversation_id=eq.${conversationId}`,
+        },
+        () => {
+          loadReads();
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, [conversationId]);
 
-  return {
-    reads,
-  };
+  return { reads };
 }
